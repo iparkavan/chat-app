@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Email is required'],
     unique: true
   },
-  passsword: {
+  password: {
     type: String,
     required: [true, 'Password is required'],
   },
@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre('save', async function(next) {
   const salt = await genSalt()
-  this.passsword = await hash(this.passsword, salt)
+  this.password = await hash(this.password, salt)
   next()
 })
 

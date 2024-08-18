@@ -1,3 +1,5 @@
+'use client'
+
 /* eslint-disable react-hooks/rules-of-hooks */
 import React from "react";
 import Link from "next/link";
@@ -6,11 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { SubmitHandler, useForm } from "react-hook-form";
-import {
-  SignupFields,
-  signupSchema,
-} from "@/features/authentication/schemas/signup-schema";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SignupFields, signupSchema } from "@/features/authentication/schemas/signup-schema";
+import { axios } from "@/lib/axios";
+import { SignupResponse } from "@/features/authentication/types/authentication-type";
 
 const page = () => {
   const {
@@ -24,7 +26,14 @@ const page = () => {
     lastName,
     email,
     password,
-  }) => {};
+  }) => {
+    // console.log(firstName, lastName, email, password)
+
+    const { data } = await axios.post<SignupResponse>('/api/auth/signup', { firstName, lastName, email, password }, { withCredentials: true })
+
+    console.log(data)
+    // if (data?.profileSetup)
+  };
 
   return (
     <div className="flex items-center justify-center py-12">
@@ -47,8 +56,12 @@ const page = () => {
                   id="first-name"
                   {...register("firstName")}
                   placeholder="Max"
-                  required
                 />
+                {errors.firstName && (
+              <span className="text-red-500 text-sm">
+                {errors.firstName.message}
+              </span>
+            )}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="last-name">Last name</Label>
@@ -56,8 +69,12 @@ const page = () => {
                   id="last-name"
                   placeholder="Robinson"
                   {...register("lastName")}
-                  required
                 />
+                {errors.lastName && (
+              <span className="text-red-500 text-sm">
+                {errors.lastName.message}
+              </span>
+            )}
               </div>
             </div>
             <div className="grid gap-2">
@@ -67,12 +84,21 @@ const page = () => {
                 type="email"
                 placeholder="m@example.com"
                 {...register("email")}
-                required
-              />
+                />
+                {errors.email && (
+                  <span className="text-red-500 text-sm">
+                    {errors.email.message}
+                  </span>
+                )}
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" {...register("password")} />
+              {errors.password && (
+              <span className="text-red-500 text-sm">
+                {errors.password.message}
+              </span>
+            )}
             </div>
             <Button type="submit" className="w-full">
               Create an account

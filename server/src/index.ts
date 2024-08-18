@@ -11,15 +11,13 @@ const port = process.env.PORT || 5000;
 const databaseURL = process.env.DATABASE_URL as string
 // const nextURL = process.env.ORIGIN as string
 
-// app.use(
-//   cors({
-//     origin:[process.env.ORIGIN as string],
-//     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-//     credentials: true
-//   })
-// )
+app.use(cors({
+  origin:[process.env.ORIGIN as string],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}))
 
-app.use(cors());
+// app.use(cors());
 
 app.use(express.json())
 
@@ -31,4 +29,4 @@ const server = app.listen(port, () => {
 
 mongoose.connect(databaseURL).then(() => console.log("Database Connected Successfully")).catch(err => console.log(err.message));
 
- 
+// nQumkesk6qvtou8C

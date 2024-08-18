@@ -1,39 +1,91 @@
-import { sign } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import User from "../models/user-model";
 import { ExpressHandler } from "../types/constant";
 import { stringify } from "querystring";
 import { response } from "express";
+import { Console } from "console";
+import { compare } from "bcrypt";
 
 const maxAge = 3 * 24 * 60 * 60 * 1000
 
-const JWT_KEY = process.env.JWT_KEY as string
 
 const createToken = (email: string, userId: string) => {
-  return sign({email, userId}, JWT_KEY, {expiresIn: maxAge})
+  const JWT_KEY = process.env.JWT_KEY as string
+  return jwt.sign({email, userId}, JWT_KEY, {expiresIn: maxAge})
 }
 
 
 export const signup: ExpressHandler = async (req, res, next) => {
   try {
-    const {email, passsword} = req.body
 
-    if (!email || !passsword) {
+    const {firstName, lastName, email, password} = req.body
+
+    if (!email || !password) {
       return res.status(400).send('Email and password is required')
     }
 
-    const user = await User.create({email, passsword})
+    const user = await User.create({ email, password })
+
+    res.cookie('__access-token', createToken(email, user.id), {
+      maxAge, 
+      secure: true,
+      sameSite: 'none'
+    }) 
+
+    return res.status(201).json({
+      user: {
+        id: user.id,
+        email: user.email,
+        profileSetup: user.profileSetup, 
+      }
+    }) 
+
+  } catch (error: any) {
+    return res.status(400).json({message: "This User is Already Created"})
+  }
+}
+
+
+export const login: ExpressHandler = async (req, res, next) => {
+  try {
+    
+    const {email, password} = req.body
+
+    if (!email || !password) {
+      return res.status(400).send('Email and password is required')
+    }
+
+    const user = await User.findOne({ email })
+
+    if (!user) {
+      return res.status(400).send('User with the given email not found')
+    }
+
+    const auth = await compare(password, user.password)
+
+    if (!auth) {
+      return res.status(400).send('Invalid password')
+    }
+
     res.cookie('jwt', createToken(email, user.id), {
       maxAge, 
       secure: true,
       sameSite: 'none'
     })
 
-    return res.status(201).json({
-      user
+    return res.status(200).json({
+      user: {
+        id: user.id,
+        email: user.email,
+        profileSetup: user.profileSetup, 
+        firstName: user.firstName,
+        lastName: user.lastName,
+        profileImage: user.profileImage
+      }
     }) 
 
-  } catch (error) {
-    return res.status
+  } catch (error: any) {
+    return res.status(400).json({message: "This User is Already Created"})
   }
 }
 

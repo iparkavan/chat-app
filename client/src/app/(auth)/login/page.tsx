@@ -53,7 +53,7 @@ const page = () => {
   };
 
   const handleGoogleSubmit = () => {
-    signInWithGoogle({ router, setNewUser, setUserInfo, setAccessToken });
+    // signInWithGoogle({ router, setNewUser, setUserInfo, setAccessToken });
   };
 
   return (
@@ -73,7 +73,6 @@ const page = () => {
               type="email"
               placeholder="m@example.com"
               {...register("Useremail")}
-              // required
             />
             {errors.Useremail && (
               <span className="text-red-500 text-sm">
@@ -95,7 +94,6 @@ const page = () => {
               id="password"
               type="password"
               {...register("Password")}
-              // required
             />
             {errors.Password && (
               <span className="text-red-500 text-sm">
