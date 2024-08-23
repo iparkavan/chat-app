@@ -9,34 +9,38 @@ import { axios, axiosPrivate } from "@/lib/axios";
 import { useAuthslice } from "@/store/slices/auth-slice";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { routes } from "@/lib/constants/routes";
 
 export default function Home() {
+  const router = useRouter();
+
   const { userInfo, setUserInfo, setAccessToken } = useAuthslice();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const getToken = Cookies.get(ACCESS_TOKEN);
-    if (getToken) {
-      setAccessToken(getToken);
+    if (!userInfo?.profileSetup) {
+      toast("Please setup your profile to continue.");
+      router.push(routes.profileSetup);
     }
-  }, [setAccessToken]);
+  }, []);
 
-  useEffect(() => {
-    const getUserInfo = async () => {
-      const response = await axiosPrivate.get(`/api/auth/get-userinfo`);
-      console.log(response?.data);
-    };
+  // useEffect(() => {
+  //   const getUserInfo = async () => {
+  //     const response = await axiosPrivate.get(`/api/auth/get-userinfo`);
+  //     console.log(response?.data);
+  //   };
 
-    if (!userInfo) {
-      getUserInfo();
-    } else {
-      setIsLoading(false);
-    }
-  }, [userInfo, setUserInfo]);
+  //   if (!userInfo) {
+  //     getUserInfo();
+  //   } else {
+  //     setIsLoading(false);
+  //   }
+  // }, [userInfo, setUserInfo]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <main className="">

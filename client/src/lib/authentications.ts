@@ -3,7 +3,7 @@
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 // import { auth } from './firebaseConfig';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import { routes } from '@/constants/routes';
+import { routes } from '@/lib/constants/routes';
 import Cookies from 'js-cookie';
 import { axios } from './axios';
 import { CheckUserTypes, UserInfoTypes } from '@/types/authentication-types';

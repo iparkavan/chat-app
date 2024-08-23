@@ -19,6 +19,9 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { signInWithGoogle } from "@/lib/authentications";
 import { useAuthslice } from "@/store/slices/auth-slice";
+import { axios } from "@/lib/axios";
+import { LoginResponse } from "@/features/authentication/types/authentication-type";
+import { routes } from "@/lib/constants/routes";
 
 const page = () => {
   const router = useRouter();
@@ -33,10 +36,30 @@ const page = () => {
     formState: { errors },
   } = useForm<LoginFields>({ resolver: zodResolver(loginSchema) });
 
-  const onSubmit: SubmitHandler<LoginFields> = async ({
-    Useremail,
-    Password,
-  }) => {
+  const onSubmit: SubmitHandler<LoginFields> = async ({ email, password }) => {
+    const { data } = await axios.post<LoginResponse>(
+      "/api/auth/login",
+      { email, password },
+      { withCredentials: true }
+    );
+    console.log(data)
+
+    if (data) {
+      
+      setUserInfo({
+        id: data.id,
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        profileImage: data.profileImage,
+        profileSetup: data.profileSetup,
+      });
+      
+
+      if (data.profileSetup) router.push(routes.chatPage);
+      else router.push(routes.profileSetup);
+    }
+
     // const data = await postLoginAction({ Useremail, Password });
     // if (data) {
     //   // console.log(data);
@@ -72,11 +95,11 @@ const page = () => {
               id="email"
               type="email"
               placeholder="m@example.com"
-              {...register("Useremail")}
+              {...register("email")}
             />
-            {errors.Useremail && (
+            {errors.email && (
               <span className="text-red-500 text-sm">
-                {errors.Useremail.message}
+                {errors.email.message}
               </span>
             )}
           </div>
@@ -90,14 +113,10 @@ const page = () => {
                 Forgot your password?
               </Link>
             </div>
-            <Input
-              id="password"
-              type="password"
-              {...register("Password")}
-            />
-            {errors.Password && (
+            <Input id="password" type="password" {...register("password")} />
+            {errors.password && (
               <span className="text-red-500 text-sm">
-                {errors.Password.message}
+                {errors.password.message}
               </span>
             )}
           </div>

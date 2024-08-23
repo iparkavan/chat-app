@@ -10,5 +10,18 @@
 export type SignupResponse = {
   id: string,
   email: string,
-  profileSetup: boolean
+  profileImage: string
+  profileSetup: boolean,
+  firstName: string,
+  lastName: string,
+}
+
+
+export type LoginResponse = {
+  id: string,
+  email: string,
+  profileImage: string
+  profileSetup: boolean,
+  firstName: string,
+  lastName: string,
 }

@@ -11,7 +11,7 @@ type UserInfoTypes = {
   lastName: string | null,
   profileImage: string | null,
   profileSetup: boolean,
-  _id: string | null,
+  id: string | null,
 }
 
 export type OnboardingTypes = {

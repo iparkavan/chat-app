@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 /* eslint-disable react-hooks/rules-of-hooks */
 import React from "react";
@@ -10,11 +10,19 @@ import { Label } from "@radix-ui/react-label";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SignupFields, signupSchema } from "@/features/authentication/schemas/signup-schema";
-import { axios } from "@/lib/axios";
+import {
+  SignupFields,
+  signupSchema,
+} from "@/features/authentication/schemas/signup-schema";
 import { SignupResponse } from "@/features/authentication/types/authentication-type";
+import { axios } from "@/lib/axios";
+import { useRouter } from "next/navigation";
+import { useAuthslice } from "@/store/slices/auth-slice";
 
 const page = () => {
+  const router = useRouter();
+  const { setUserInfo } = useAuthslice();
+
   const {
     handleSubmit,
     register,
@@ -27,12 +35,26 @@ const page = () => {
     email,
     password,
   }) => {
-    // console.log(firstName, lastName, email, password)
+    console.log(firstName, lastName, email, password);
 
-    const { data } = await axios.post<SignupResponse>('/api/auth/signup', { firstName, lastName, email, password }, { withCredentials: true })
+    const response = await axios.post<SignupResponse>(
+      "/api/auth/signup",
+      { firstName, lastName, email, password },
+      { withCredentials: true }
+    );
 
-    console.log(data)
-    // if (data?.profileSetup)
+    if (response.status === 201) {
+      setUserInfo({
+        id: response.data.id,
+        email: response.data.email,
+        firstName: response.data.firstName,
+        lastName: response.data.lastName,
+        profileImage: response.data.profileImage,
+        profileSetup: response.data.profileSetup,
+      });
+
+      router.push("/profile-setup");
+    }
   };
 
   return (
@@ -58,10 +80,10 @@ const page = () => {
                   placeholder="Max"
                 />
                 {errors.firstName && (
-              <span className="text-red-500 text-sm">
-                {errors.firstName.message}
-              </span>
-            )}
+                  <span className="text-red-500 text-sm">
+                    {errors.firstName.message}
+                  </span>
+                )}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="last-name">Last name</Label>
@@ -71,10 +93,10 @@ const page = () => {
                   {...register("lastName")}
                 />
                 {errors.lastName && (
-              <span className="text-red-500 text-sm">
-                {errors.lastName.message}
-              </span>
-            )}
+                  <span className="text-red-500 text-sm">
+                    {errors.lastName.message}
+                  </span>
+                )}
               </div>
             </div>
             <div className="grid gap-2">
@@ -84,21 +106,21 @@ const page = () => {
                 type="email"
                 placeholder="m@example.com"
                 {...register("email")}
-                />
-                {errors.email && (
-                  <span className="text-red-500 text-sm">
-                    {errors.email.message}
-                  </span>
-                )}
+              />
+              {errors.email && (
+                <span className="text-red-500 text-sm">
+                  {errors.email.message}
+                </span>
+              )}
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" {...register("password")} />
               {errors.password && (
-              <span className="text-red-500 text-sm">
-                {errors.password.message}
-              </span>
-            )}
+                <span className="text-red-500 text-sm">
+                  {errors.password.message}
+                </span>
+              )}
             </div>
             <Button type="submit" className="w-full">
               Create an account

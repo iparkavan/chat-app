@@ -1,6 +1,7 @@
 const routes = {
   login: '/login',
-  dashboard: '/'
+  profileSetup: '/profile-setup',
+  chatPage: '/',
 }
 
 export { routes }

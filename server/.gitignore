@@ -4,7 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
-.env
+# .env
 .chat-app-6903f-firebase-adminsdk-grebr-7f2a1b25a7.json
 .yarn/install-state.gz
 

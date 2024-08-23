@@ -3,7 +3,7 @@ import {create, StateCreator} from 'zustand'
 import { jwtDecode } from 'jwt-decode'
 import { persist } from  'zustand/middleware'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
-import { routes } from '@/constants/routes'
+import { routes } from '@/lib/constants/routes'
 import Cookies from 'js-cookie'
 
 type DecodedToken = {

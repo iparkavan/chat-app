@@ -4,7 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { routes } from "@/constants/routes";
+import { routes } from "@/lib/constants/routes";
 import { useAuthslice } from "@/store/slices/auth-slice";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -19,53 +19,53 @@ const onboarding = () => {
   const { userInfo, setNewUser, setUserInfo, newUser, accessToken } =
     useAuthslice();
 
-  useEffect(() => {
-    if (!newUser && !userInfo?.email) {
-      router.push(routes.login);
-    } else if (!newUser && userInfo?.email) {
-      router.push(routes.dashboard);
-    }
-  }, [newUser, router, userInfo?.email]);
+  // useEffect(() => {
+  //   if (!newUser && !userInfo?.email) {
+  //     router.push(routes.login);
+  //   } else if (!newUser && userInfo?.email) {
+  //     router.push(routes.dashboard);
+  //   }
+  // }, [newUser, router, userInfo?.email]);
 
-  const onSubmitHandler = async (e: FormEvent) => {
-    e.preventDefault();
+  // const onSubmitHandler = async (e: FormEvent) => {
+  //   e.preventDefault();
 
-    try {
-      const { data } = await axios.post<OnboardingTypes>(
-        `/api/auth/onboarding`,
-        {
-          firstName: userInfo?.firstName,
-          lastName: userInfo?.lastName,
-          email: userInfo?.email,
-          profileImage: userInfo?.profileImage,
-        }
-      );
+  //   try {
+  //     const { data } = await axios.post<OnboardingTypes>(
+  //       `/api/auth/onboarding`,
+  //       {
+  //         firstName: userInfo?.firstName,
+  //         lastName: userInfo?.lastName,
+  //         email: userInfo?.email,
+  //         profileImage: userInfo?.profileImage,
+  //       }
+  //     );
 
-      if (data?.status) {
-        setNewUser(false);
-        setUserInfo({
-          email: data?.user?.email,
-          firstName: data?.user?.firstName,
-          lastName: data?.user?.lastName,
-          profileImage: data?.user?.profileImage,
-          profileSetup: false,
-          _id: data?.user?._id,
-        });
-      }
+  //     if (data?.status) {
+  //       setNewUser(false);
+  //       setUserInfo({
+  //         email: data?.user?.email,
+  //         firstName: data?.user?.firstName,
+  //         lastName: data?.user?.lastName,
+  //         profileImage: data?.user?.profileImage,
+  //         profileSetup: false,
+  //         _id: data?.user?._id,
+  //       });
+  //     }
 
-      console.log("USer created", data);
-      if (data?.user) {
-        Cookies.set(ACCESS_TOKEN, accessToken);
-        router.push(routes.dashboard);
-      }
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  };
+  //     console.log("USer created", data);
+  //     if (data?.user) {
+  //       Cookies.set(ACCESS_TOKEN, accessToken);
+  //       router.push(routes.dashboard);
+  //     }
+  //   } catch (error: any) {
+  //     console.log(error.message);
+  //   }
+  // };
 
   return (
     <div className="flex items-center justify-center py-12">
-      <form className="mx-auto grid w-[350px] gap-6" onSubmit={onSubmitHandler}>
+      <form className="mx-auto grid w-[350px] gap-6" onSubmit={() => {}}>
         <div className="grid justify-items-center">
           {userInfo?.profileImage && (
             <Image
