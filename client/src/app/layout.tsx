@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/common/providers";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { useEffect } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +29,7 @@ export default function CommonLayout({
         >
           <Providers>
             {children}
-            <Toaster />
+            <Toaster closeButton />
           </Providers>
         </ThemeProvider>
       </body>

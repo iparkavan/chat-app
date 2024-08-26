@@ -1,8 +1,5 @@
 import jwt from "jsonwebtoken";
 import { ExpressHandler } from "../types/constant";
-import { stringify } from "querystring";
-import { response } from "express";
-import { Console } from "console";
 import { compare } from "bcrypt";
 import User from "../models/user-model";
 
@@ -14,7 +11,7 @@ const createToken = (email: string, userId: string) => {
   return jwt.sign({email, userId}, JWT_KEY, {expiresIn: maxAge})
 }
 
-const ACCESS_TOKEN = '__access-token'
+export const ACCESS_TOKEN = '__access-token'
 
 export const signup: ExpressHandler = async (req, res, next) => {
 
@@ -50,7 +47,7 @@ export const signup: ExpressHandler = async (req, res, next) => {
     }) 
 
   } catch (error: any) {
-    return res.status(500).json({message: error.message })
+    return res.status(500).json({ message: error.message })
   }
 }
 
@@ -92,67 +89,84 @@ export const login: ExpressHandler = async (req, res, next) => {
     }) 
 
   } catch (error: any) {
-    return res.status(400).json({message: "This User is Already Created"})
-  }
-}
-
-export const checkUserProfileStatus: ExpressHandler = async (req, res, next) => {
-  try {
-   const { email } = req.body as { email: string };
-
-   if (!email) {
-    return res.json({ msg: "Email is required", status: false });
-   }
-
-   const user = await User.findOne({ email });
-   console.log("killler",user)
-
-   if (!user) {
-    return res.json({ msg: "User Not Found", status: false });
-  } else {
-    res.json({ msg: "User found", status: true, data: user });
-  }
-  } catch (error: any) {
-    console.log(error.message)
+    return res.status(400).json({ message: error.message })
   }
 }
 
 
-export const onboardUser: ExpressHandler = async (req, res, next) => {
-  try {
-    const { firstName, lastName, email, profileImage } = req.body;
-    console.log(firstName, lastName, email, profileImage)
-    
-    // if (!firstName || !lastName || !email || !profileImage) {
-    //   return res.status(400).json("Name, Email and Display picture are required");
-    // }
-
-    const user = await User.create({
-      firstName,
-      lastName,
-      email,
-      profileImage,
-    });
-
-    return res.json({
-      msg: "The User has created successfully",
-      status: true,
-      user,
-    });
-    
-  } catch (error) {
-    res.json({ msg: "Error Creating User", status: false });
-  }
-};
 
 export const getUserInfo: ExpressHandler = async (req, res , next) => {
   try {
-    const userData = await User.findById(req.user?.uid)
-    console.log("userdata",userData)
-    // res.status(200).json(req.user)
+    const userInfo = await User.findById(req.userId)
+
+    if (!userInfo) return res.status(404).send("User with the given id not found")
+    
+    return res.status(200).json({
+      id: userInfo.id,
+      email: userInfo.email,
+      profileSetup: userInfo.profileSetup, 
+      firstName: userInfo.firstName,
+      lastName: userInfo.lastName,
+      profileImage: userInfo.profileImage
+    })  
+    
   } catch (error) {
     res.status(401).json({message: "Error sending userInfo"})
   }
 }
+
+
+
+
+// export const checkUserProfileStatus: ExpressHandler = async (req, res, next) => {
+//   try {
+//    const { email } = req.body as { email: string };
+
+//    if (!email) {
+//     return res.json({ msg: "Email is required", status: false });
+//    }
+
+//    const user = await User.findOne({ email });
+//    console.log("killler",user)
+
+//    if (!user) {
+//     return res.json({ msg: "User Not Found", status: false });
+//   } else {
+//     res.json({ msg: "User found", status: true, data: user });
+//   }
+//   } catch (error: any) {
+//     console.log(error.message)
+//   }
+// }
+
+
+// export const onboardUser: ExpressHandler = async (req, res, next) => {
+//   try {
+//     const { firstName, lastName, email, profileImage } = req.body;
+//     console.log(firstName, lastName, email, profileImage)
+    
+//     // if (!firstName || !lastName || !email || !profileImage) {
+//     //   return res.status(400).json("Name, Email and Display picture are required");
+//     // }
+
+//     const user = await User.create({
+//       firstName,
+//       lastName,
+//       email,
+//       profileImage,
+//     });
+
+//     return res.json({
+//       msg: "The User has created successfully",
+//       status: true,
+//       user,
+//     });
+    
+//   } catch (error: any) {
+//     console.log(error.message)
+//     res.json({ msg: "Error Creating User", status: false });
+//   }
+// };
+
 
 

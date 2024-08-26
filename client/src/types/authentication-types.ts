@@ -12,7 +12,7 @@ type UserInfoTypes = {
   profileImage: string | null,
   profileSetup: boolean,
   id: string | null,
-}
+} | undefined
 
 export type OnboardingTypes = {
   msg: string,

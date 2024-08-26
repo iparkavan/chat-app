@@ -5,16 +5,18 @@ import ChatUsersContainer from "@/features/chat-room/components/left-container/c
 import ChatContainer from "@/features/chat-room/components/right-container/chat-container";
 import ChatForm from "@/features/chat-room/components/right-container/chat-form";
 import { ACCESS_TOKEN } from "@/lib/authentications";
-import { axios, axiosPrivate } from "@/lib/axios";
 import { useAuthslice } from "@/store/slices/auth-slice";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { routes } from "@/lib/constants/routes";
+import { axios } from "@/lib/axios";
+import { toast } from "sonner";
 
 export default function Home() {
   const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const { userInfo, setUserInfo, setAccessToken } = useAuthslice();
 
@@ -23,24 +25,36 @@ export default function Home() {
       toast("Please setup your profile to continue.");
       router.push(routes.profileSetup);
     }
-  }, []);
+  }, [userInfo?.profileSetup]);
 
-  // useEffect(() => {
-  //   const getUserInfo = async () => {
-  //     const response = await axiosPrivate.get(`/api/auth/get-userinfo`);
-  //     console.log(response?.data);
-  //   };
+  useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        const response = await axios.get(`/api/auth/get-userinfo`, {
+          withCredentials: true,
+        });
+        if (response?.status === 200 && response.data.id) {
+          setUserInfo(response.data);
+        } else {
+          setUserInfo(undefined);
+        }
+      } catch (error) {
+        setUserInfo(undefined);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  //   if (!userInfo) {
-  //     getUserInfo();
-  //   } else {
-  //     setIsLoading(false);
-  //   }
-  // }, [userInfo, setUserInfo]);
+    if (!userInfo) {
+      getUserInfo();
+    } else {
+      setIsLoading(false);
+    }
+  }, [userInfo, setUserInfo]);
 
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <main className="">

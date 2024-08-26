@@ -6,6 +6,6 @@ export type ExpressHandler = (req: Request, res: Response, next: NextFunction) =
 
 declare module 'express-serve-static-core' {
   interface Request {
-    user?: DecodedIdToken;
+    userId?: DecodedIdToken;
   }
 }

@@ -14,7 +14,11 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL(routes.chatPage, request.url))
     } 
   }
-   
+  
+  // if (request.nextUrl.pathname === "/" && token) {
+  //   return NextResponse.redirect(new URL('/chat', request.url))
+  // } 
+  
   if (!token) {
     return NextResponse.redirect(new URL(routes.login, request.url))
   } 
@@ -22,5 +26,5 @@ export async function middleware(request: NextRequest) {
 }
  
 export const config = {
-  matcher: ['/'],
+  matcher: ['/chat', "/"],
 }

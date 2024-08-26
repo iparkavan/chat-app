@@ -1,3 +1,24 @@
+import { ACCESS_TOKEN } from "../controllers/auth-controllers";
+import { ExpressHandler } from "../types/constant";
+import jwt from 'jsonwebtoken'
+
+export const verifyToken: ExpressHandler = async (req, res, next) => {
+    const token = req.cookies[ACCESS_TOKEN]
+
+    if (!token) return res.status(401).send('You are not authenticated!')
+    
+    jwt.verify(token, process.env.JWT_KEY as string, async (err: any, payload: any) => {
+        if (err) return res.status(403).send("Token is not valid")
+        
+        req.userId = payload.userId
+        
+        next() 
+    })
+}
+
+
+
+
 // // import admin from 'firebase-admin';
 // // import { Request, Response, NextFunction } from 'express';
 
