@@ -34,7 +34,7 @@ const ClientProviders = ({ children }: { children: React.ReactNode }) => {
   }, [userInfo, setUserInfo]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Loading...ding...</div>;
   }
 
   return <div>{children}</div>;

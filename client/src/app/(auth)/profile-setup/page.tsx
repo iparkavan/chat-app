@@ -16,7 +16,7 @@ import { useAuthslice } from "@/store/slices/auth-slice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AvatarIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { toast } from "sonner";
@@ -24,9 +24,12 @@ import { toast } from "sonner";
 const page = () => {
   const router = useRouter();
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState(null);
   const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [hovered, setHovered] = useState(false);
   const [bgColor, setBgColor] = useState(randomIndex);
 
@@ -73,6 +76,22 @@ const page = () => {
       setIsLoading(false);
     }
   };
+
+  const handleFileInputClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ): void => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImageChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    const file = event.target.files?.[0];
+    if (file) {
+      console.log(file);
+    }
+  };
+
+  const handleDeleteImage = () => {};
+
   return (
     <div className="flex items-center justify-center gap-6">
       <form
@@ -107,14 +126,19 @@ const page = () => {
                   )}
                   style={{ backgroundColor: bgColors[bgColor] }}
                 >
-                  {firstName
-                    ? firstName.split("").shift()
+                  {firstName && lastName
+                    ? `${firstName.split("").shift()}${lastName
+                        .split("")
+                        .shift()}`
                     : userInfo?.email?.split("").shift()}
                 </div>
               )}
             </Avatar>
             {hovered && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 ring-fuchsia-50 rounded-full">
+              <div
+                className="absolute inset-0 flex items-center justify-center bg-black/50 ring-fuchsia-50 rounded-full"
+                onClick={image ? handleDeleteImage : handleFileInputClick}
+              >
                 {image ? (
                   <FaTrash className="text-white text-3xl cursor-pointer" />
                 ) : (
@@ -122,6 +146,14 @@ const page = () => {
                 )}
               </div>
             )}
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              onChange={handleImageChange}
+              name="profile-image"
+              accept=".jpg, .png, .jpeg, .svg, .webp"
+            />
           </div>
           <div className="flex items-center gap-3">
             {bgColors.map((item, index) => (
@@ -143,8 +175,12 @@ const page = () => {
             <div className="grid gap-2">
               <Label htmlFor="first-name">First name</Label>
               <Input
-                id="first-name"
-                {...register("firstName")}
+                id="firstName"
+                {...register("firstName", {
+                  onChange(event) {
+                    setFirstName(event.target.value);
+                  },
+                })}
                 value={userInfo?.firstName || undefined}
                 placeholder="Max"
               />
@@ -157,10 +193,14 @@ const page = () => {
             <div className="grid gap-2">
               <Label htmlFor="last-name">Last name</Label>
               <Input
-                id="last-name"
+                id="lastName"
                 placeholder="Robinson"
                 value={userInfo?.lastName || undefined}
-                {...register("lastName")}
+                {...register("lastName", {
+                  onChange(event) {
+                    setLastName(event.target.value);
+                  },
+                })}
               />
               {errors.lastName && (
                 <span className="text-red-500 text-sm">
@@ -180,14 +220,8 @@ const page = () => {
             />
           </div>
 
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className="w-full"
-          >
-            {isLoading && (
-              <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-            )}
+          <Button type="submit" disabled={isLoading} className="w-full">
+            {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
             Proceed
           </Button>
         </div>

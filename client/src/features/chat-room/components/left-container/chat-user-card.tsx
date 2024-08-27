@@ -1,5 +1,6 @@
 "use client";
 
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useAuthslice } from "@/store/slices/auth-slice";
 import Image from "next/image";
 import React from "react";
@@ -10,7 +11,7 @@ const ChatUserCard = () => {
   return (
     <div className="flex w-full hover:bg-muted rounded-2xl p-2 items-center justify-between">
       <div className="flex items-center justify-start gap-4">
-        {userInfo?.profileImage && (
+        {userInfo?.profileImage ? (
           <div className="relative">
             <Image
               className=" rounded-full"
@@ -20,6 +21,10 @@ const ChatUserCard = () => {
               height={44}
             />
           </div>
+        ) : (
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          </Avatar>
         )}
         <div>
           <p className="font-semibold text-sm">Park Avan (You)</p>
