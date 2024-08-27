@@ -16,9 +16,7 @@ import { toast } from "sonner";
 export default function Home() {
   const router = useRouter();
 
-  const [isLoading, setIsLoading] = useState(true);
-
-  const { userInfo, setUserInfo, setAccessToken } = useAuthslice();
+  const { userInfo } = useAuthslice();
 
   useEffect(() => {
     if (!userInfo?.profileSetup) {
@@ -26,35 +24,6 @@ export default function Home() {
       router.push(routes.profileSetup);
     }
   }, [userInfo?.profileSetup]);
-
-  useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        const response = await axios.get(`/api/auth/get-userinfo`, {
-          withCredentials: true,
-        });
-        if (response?.status === 200 && response.data.id) {
-          setUserInfo(response.data);
-        } else {
-          setUserInfo(undefined);
-        }
-      } catch (error) {
-        setUserInfo(undefined);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (!userInfo) {
-      getUserInfo();
-    } else {
-      setIsLoading(false);
-    }
-  }, [userInfo, setUserInfo]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <main className="">

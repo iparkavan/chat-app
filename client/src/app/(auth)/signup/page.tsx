@@ -35,7 +35,6 @@ const page = () => {
     email,
     password,
   }) => {
-    console.log(firstName, lastName, email, password);
 
     const response = await axios.post<SignupResponse>(
       "/api/auth/signup",

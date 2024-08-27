@@ -1,47 +1,199 @@
 "use client";
 
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  ProfileSetupFields,
+  profileSetupSchema,
+} from "@/features/authentication/schemas/profile-setup-schema";
 import { axios } from "@/lib/axios";
+import { bgColors, randomIndex } from "@/lib/constants/constsnt";
+import { routes } from "@/lib/constants/routes";
+import { cn } from "@/lib/utils";
 import { useAuthslice } from "@/store/slices/auth-slice";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AvatarIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { FaPlus, FaTrash } from "react-icons/fa";
+import { toast } from "sonner";
 
 const page = () => {
   const router = useRouter();
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [image, setImage] = useState(null);
+  const [firstName, setFirstName] = useState("");
+  const [hovered, setHovered] = useState(false);
+  const [bgColor, setBgColor] = useState(randomIndex);
 
-  const { userInfo, setUserInfo, setAccessToken } = useAuthslice();
+  const { userInfo, setUserInfo } = useAuthslice();
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<ProfileSetupFields>({
+    resolver: zodResolver(profileSetupSchema),
+  });
 
   useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        const response = await axios.get(`/api/auth/get-userinfo`, {
-          withCredentials: true,
-        });
-        if (response?.status === 200 && response.data.id) {
-          setUserInfo(response.data);
-        } else {
-          setUserInfo(undefined);
-        }
-      } catch (error) {
-        setUserInfo(undefined);
-      } finally {
+    if (userInfo?.profileSetup) {
+      toast("Please setup your profile to continue.");
+      router.push(routes.chatPage);
+    }
+  }, [userInfo?.profileSetup]);
+
+  const onProfileSetupSubmit: SubmitHandler<ProfileSetupFields> = async ({
+    firstName,
+    lastName,
+  }) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.post(
+        `/api/auth/update-profile`,
+        {
+          firstName,
+          lastName,
+          bgColor,
+        },
+        { withCredentials: true }
+      );
+      if (response.status === 200 && response.data) {
+        setUserInfo({ ...response.data });
+        toast.success("Profile updated successfully");
+        router.push(routes.chatPage);
         setIsLoading(false);
       }
-    };
-
-    if (!userInfo) {
-      getUserInfo();
-    } else {
+    } catch (error: any) {
+      toast(error.message);
       setIsLoading(false);
     }
-  }, [userInfo, setUserInfo]);
+  };
+  return (
+    <div className="flex items-center justify-center gap-6">
+      <form
+        className="mx-auto grid w-[350px] gap-6"
+        onSubmit={handleSubmit(onProfileSetupSubmit)}
+      >
+        <div className="grid gap-2 text-center">
+          <h1 className="text-3xl font-bold">Profile Setup</h1>
+          <p className="text-balance text-muted-foreground">
+            Complete your profile setup to proceed further
+          </p>
+        </div>
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+        <div className="flex items-center justify-center flex-col gap-5">
+          <div
+            className="relative h-32 md:h-48 w-32 md:w-48 flex items-center justify-center"
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+          >
+            <Avatar className="h-32 w-32 md:w-48 md:h-48 rounded-full overflow-hidden">
+              {/* <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" /> */}
+              {image ? (
+                <AvatarImage
+                  src={image}
+                  alt="profile"
+                  className="object-cover w-full h-full"
+                />
+              ) : (
+                <div
+                  className={cn(
+                    `uppercase h-32 w-32 md:w-48 md:h-48 text-5xl flex items-center justify-center rounded-full text-white`
+                  )}
+                  style={{ backgroundColor: bgColors[bgColor] }}
+                >
+                  {firstName
+                    ? firstName.split("").shift()
+                    : userInfo?.email?.split("").shift()}
+                </div>
+              )}
+            </Avatar>
+            {hovered && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 ring-fuchsia-50 rounded-full">
+                {image ? (
+                  <FaTrash className="text-white text-3xl cursor-pointer" />
+                ) : (
+                  <FaPlus className="text-white text-3xl cursor-pointer" />
+                )}
+              </div>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            {bgColors.map((item, index) => (
+              <div
+                key={index}
+                className={cn(
+                  `w-10 h-10 rounded-full transition-all duration-300`,
+                  bgColor === index ? "ring-4 ring-offset-1 ring-primary" : ""
+                )}
+                onClick={() => setBgColor(index)}
+                style={{ backgroundColor: item }}
+              />
+            ))}
+          </div>
+        </div>
 
-  return <div className="text-4xl text-green-600">{userInfo?.email}</div>;
+        <div className="grid gap-4 mt-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="first-name">First name</Label>
+              <Input
+                id="first-name"
+                {...register("firstName")}
+                value={userInfo?.firstName || undefined}
+                placeholder="Max"
+              />
+              {errors.firstName && (
+                <span className="text-red-500 text-sm">
+                  {errors.firstName.message}
+                </span>
+              )}
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="last-name">Last name</Label>
+              <Input
+                id="last-name"
+                placeholder="Robinson"
+                value={userInfo?.lastName || undefined}
+                {...register("lastName")}
+              />
+              {errors.lastName && (
+                <span className="text-red-500 text-sm">
+                  {errors.lastName.message}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="m@example.com"
+              disabled
+              value={userInfo?.email || undefined}
+            />
+          </div>
+
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-full"
+          >
+            {isLoading && (
+              <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Proceed
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default page;

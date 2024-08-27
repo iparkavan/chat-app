@@ -42,7 +42,8 @@ export const signup: ExpressHandler = async (req, res, next) => {
         profileSetup: user.profileSetup, 
         firstName: user.firstName,
         lastName: user.lastName,
-        profileImage: user.profileImage
+        profileImage: user.profileImage,
+        bgColor: user.bgColor
       }
     }) 
 
@@ -85,7 +86,8 @@ export const login: ExpressHandler = async (req, res, next) => {
       profileSetup: user.profileSetup, 
       firstName: user.firstName,
       lastName: user.lastName,
-      profileImage: user.profileImage
+      profileImage: user.profileImage,
+      bgColor: user.bgColor
     }) 
 
   } catch (error: any) {
@@ -107,7 +109,34 @@ export const getUserInfo: ExpressHandler = async (req, res , next) => {
       profileSetup: userInfo.profileSetup, 
       firstName: userInfo.firstName,
       lastName: userInfo.lastName,
-      profileImage: userInfo.profileImage
+      profileImage: userInfo.profileImage,
+      bgColor: userInfo.bgColor
+    })  
+    
+  } catch (error) {
+    res.status(401).json({message: "Error sending userInfo"})
+  }
+}
+
+
+export const updateProfile: ExpressHandler = async (req, res , next) => {
+  try {
+    const { firstName, lastName, bgColor } = req.body
+
+    if (!firstName || !lastName || !bgColor) return res.status(400).send("Firstname, Lastname and BgColor is mandatory")
+
+    const userInfo = await User.findByIdAndUpdate(req.userId, {firstName, lastName, bgColor, profileSetup: true}, {new: true, runValidators: true})
+
+    if (!userInfo) return res.status(404).send("User with the given id not found")
+    
+    return res.status(200).json({
+      id: userInfo.id,
+      email: userInfo.email,
+      profileSetup: userInfo.profileSetup, 
+      firstName: userInfo.firstName,
+      lastName: userInfo.lastName,
+      profileImage: userInfo.profileImage,
+      bgColor: userInfo.bgColor
     })  
     
   } catch (error) {

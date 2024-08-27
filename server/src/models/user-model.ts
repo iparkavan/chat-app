@@ -26,7 +26,12 @@ const userSchema = new mongoose.Schema({
   profileSetup: {
     type: Boolean,
     default: false
-  }
+  },
+  bgColor: {
+    type: String,
+    default: false
+  },
+  
 })
 
 userSchema.pre('save', async function(next) {

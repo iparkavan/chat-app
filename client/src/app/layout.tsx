@@ -5,6 +5,7 @@ import { Providers } from "@/common/providers";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { useEffect } from "react";
+import ClientProviders from "@/lib/client-providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,8 +29,10 @@ export default function CommonLayout({
           disableTransitionOnChange
         >
           <Providers>
-            {children}
-            <Toaster closeButton />
+            <ClientProviders>
+              {children}
+              <Toaster closeButton />
+            </ClientProviders>
           </Providers>
         </ThemeProvider>
       </body>
