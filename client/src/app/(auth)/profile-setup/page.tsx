@@ -16,7 +16,13 @@ import { useAuthslice } from "@/store/slices/auth-slice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AvatarIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, {
+  ChangeEvent,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { toast } from "sonner";
@@ -27,11 +33,11 @@ const page = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [image, setImage] = useState(null);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [image, setImage] = useState<string | undefined>(undefined);
+  const [firstName, setFirstName] = useState<string | null>(null);
+  const [lastName, setLastName] = useState<string | null>(null);
   const [hovered, setHovered] = useState(false);
-  const [bgColor, setBgColor] = useState(randomIndex);
+  const [bgColor, setBgColor] = useState<number>(randomIndex);
 
   const { userInfo, setUserInfo } = useAuthslice();
 
@@ -42,6 +48,19 @@ const page = () => {
   } = useForm<ProfileSetupFields>({
     resolver: zodResolver(profileSetupSchema),
   });
+
+  const host = "http://localhost:4000";
+
+  useEffect(() => {
+    if (userInfo?.profileSetup) {
+      setFirstName(userInfo.firstName);
+      setLastName(userInfo.lastName);
+      setBgColor(userInfo.bgColor as number);
+    }
+    if (userInfo?.profileImage) {
+      setImage(`${host}/${userInfo.profileImage}`);
+    }
+  }, []);
 
   useEffect(() => {
     if (userInfo?.profileSetup) {
@@ -78,19 +97,57 @@ const page = () => {
   };
 
   const handleFileInputClick = (
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLDivElement>
   ): void => {
     fileInputRef.current?.click();
   };
 
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>): void => {
+  const handleImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      console.log(file);
+      const formData = new FormData();
+      formData.append("profile-image", file);
+
+      const response = await axios.post(
+        `/api/auth/add-profile-image`,
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200 && response.data.image) {
+        if (userInfo) {
+          setUserInfo({ ...userInfo, profileImage: response.data.image });
+          toast.success("Image Uploaded Successfully");
+        }
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleDeleteImage = () => {};
+  const handleDeleteImage = async () => {
+    try {
+      const response = await axios.delete("/api/auth/remove-profile-image", {
+        withCredentials: true,
+      });
+
+      if (response.status === 200) {
+        if (userInfo) {
+          setUserInfo({ ...userInfo, profileImage: null });
+        }
+        toast.success("Image removed successfully");
+        setImage(undefined);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center gap-6">
@@ -124,7 +181,10 @@ const page = () => {
                   className={cn(
                     `uppercase h-32 w-32 md:w-48 md:h-48 text-5xl flex items-center justify-center rounded-full text-white`
                   )}
-                  style={{ backgroundColor: bgColors[bgColor] }}
+                  style={{
+                    backgroundColor: bgColors[bgColor],
+                    transition: "all .3s",
+                  }}
                 >
                   {firstName && lastName
                     ? `${firstName.split("").shift()}${lastName
@@ -155,19 +215,21 @@ const page = () => {
               accept=".jpg, .png, .jpeg, .svg, .webp"
             />
           </div>
-          <div className="flex items-center gap-3">
-            {bgColors.map((item, index) => (
-              <div
-                key={index}
-                className={cn(
-                  `w-10 h-10 rounded-full transition-all duration-300`,
-                  bgColor === index ? "ring-4 ring-offset-1 ring-primary" : ""
-                )}
-                onClick={() => setBgColor(index)}
-                style={{ backgroundColor: item }}
-              />
-            ))}
-          </div>
+          {!image && (
+            <div className="flex items-center gap-3">
+              {bgColors.map((item, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    `w-10 h-10 rounded-full transition-all duration-300`,
+                    bgColor === index ? "ring-4 ring-offset-1 ring-primary" : ""
+                  )}
+                  onClick={() => setBgColor(index)}
+                  style={{ backgroundColor: item }}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="grid gap-4 mt-6">
