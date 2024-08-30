@@ -1,6 +1,8 @@
 "use client";
 
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { HOST } from "@/lib/constants/constsnt";
 import { useAuthslice } from "@/store/slices/auth-slice";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
@@ -13,17 +15,23 @@ const ChatHeader = () => {
     <div className="flex items-center justify-between">
       <div className="flex items-center justify-start gap-4">
         <div className="relative">
-          <Image
-            className=" rounded-full"
-            src={userInfo?.profileImage || ""}
-            alt=""
-            width={44}
-            height={44}
-          />
+          {userInfo?.profileImage ? (
+            <Avatar>
+              <AvatarImage
+                src={`${HOST}/${userInfo?.profileImage}` || ""}
+                alt="profile"
+                className="object-cover w-full h-full"
+              />
+            </Avatar>
+          ) : (
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            </Avatar>
+          )}
         </div>
         <div>
           <div>
-            <p className="font-semibold text-sm">Park Avan (You)</p>
+            <p className="font-semibold text-sm">{userInfo?.firstName}</p>
             {/* <span className="text-xs text-green-700 font-semibold">
                 Typing...
               </span> */}
@@ -32,7 +40,7 @@ const ChatHeader = () => {
       </div>
 
       <div className="">
-        <Button variant={'ghost'} size={"icon"}>
+        <Button variant={"ghost"} size={"icon"}>
           <ChevronRightIcon className="" />
         </Button>
       </div>

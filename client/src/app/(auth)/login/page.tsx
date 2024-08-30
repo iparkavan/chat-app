@@ -26,8 +26,8 @@ import { routes } from "@/lib/constants/routes";
 const page = () => {
   const router = useRouter();
 
-  const { mutate, isPending } = useLogin();
-  const { setNewUser, setUserInfo, setAccessToken } = useAuthslice();
+  const { isPending } = useLogin();
+  const { setUserInfo } = useAuthslice();
   // const { login } = useAuth();
 
   const {
@@ -42,10 +42,9 @@ const page = () => {
       { email, password },
       { withCredentials: true }
     );
-    console.log(data)
+    console.log(data);
 
     if (data) {
-      
       setUserInfo({
         id: data.id,
         email: data.email,
@@ -53,8 +52,8 @@ const page = () => {
         lastName: data.lastName,
         profileImage: data.profileImage,
         profileSetup: data.profileSetup,
+        bgColor: data.bgColor,
       });
-      
 
       if (data.profileSetup) router.push(routes.chatPage);
       else router.push(routes.profileSetup);

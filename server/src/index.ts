@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import authRoutes from "./routes/auth-routes";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 dotenv.config();
 
@@ -27,7 +28,9 @@ app.use(
   })
 );
 
-app.use("/uploads/profiles", express.static("/uploads/profiles"));
+// app.use("/uploads/profiles", express.static("/uploads/profiles"));
+
+app.use("/src/uploads/profiles", express.static("src/uploads/profiles"));
 
 app.use(cookieParser());
 app.use(express.json());

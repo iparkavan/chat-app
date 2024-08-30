@@ -35,7 +35,6 @@ const page = () => {
     email,
     password,
   }) => {
-
     const response = await axios.post<SignupResponse>(
       "/api/auth/signup",
       { firstName, lastName, email, password },
@@ -50,6 +49,7 @@ const page = () => {
         lastName: response.data.lastName,
         profileImage: response.data.profileImage,
         profileSetup: response.data.profileSetup,
+        bgColor: response.data.bgColor,
       });
 
       router.push("/profile-setup");

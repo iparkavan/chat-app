@@ -151,10 +151,15 @@ export const addProfileImage: ExpressHandler = async (req, res, next) => {
       return res.status(400).send("Image File is required");
     }
 
+    // const date = Date.now();
+
+    // let fileName = "src/uploads/profiles/" + date + req.file.originalname;
+
+    // renameSync(req.file.path, fileName);
+
     const date = Date.now();
-
-    let fileName = "uploads/profiles/" + date + req.file.originalname;
-
+    
+    let fileName = `src/uploads/profiles/${date}-${req.file.originalname}`;
     renameSync(req.file.path, fileName);
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -166,7 +171,8 @@ export const addProfileImage: ExpressHandler = async (req, res, next) => {
     return res.status(200).json({
       profileImage: updatedUser?.profileImage,
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.log(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

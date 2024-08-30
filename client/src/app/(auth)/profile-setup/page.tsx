@@ -8,8 +8,9 @@ import {
   ProfileSetupFields,
   profileSetupSchema,
 } from "@/features/authentication/schemas/profile-setup-schema";
+import { ImageChangeResponse } from "@/features/authentication/types/authentication-type";
 import { axios } from "@/lib/axios";
-import { bgColors, randomIndex } from "@/lib/constants/constsnt";
+import { bgColors, HOST, randomIndex } from "@/lib/constants/constsnt";
 import { routes } from "@/lib/constants/routes";
 import { cn } from "@/lib/utils";
 import { useAuthslice } from "@/store/slices/auth-slice";
@@ -40,6 +41,8 @@ const page = () => {
   const [bgColor, setBgColor] = useState<number>(randomIndex);
 
   const { userInfo, setUserInfo } = useAuthslice();
+  console.log(userInfo)
+  console.log(image);
 
   const {
     handleSubmit,
@@ -49,8 +52,6 @@ const page = () => {
     resolver: zodResolver(profileSetupSchema),
   });
 
-  const host = "http://localhost:4000";
-
   useEffect(() => {
     if (userInfo?.profileSetup) {
       setFirstName(userInfo.firstName);
@@ -58,7 +59,7 @@ const page = () => {
       setBgColor(userInfo.bgColor as number);
     }
     if (userInfo?.profileImage) {
-      setImage(`${host}/${userInfo.profileImage}`);
+      setImage(`${HOST}/${userInfo.profileImage}`);
     }
   }, []);
 
@@ -108,7 +109,7 @@ const page = () => {
       const formData = new FormData();
       formData.append("profile-image", file);
 
-      const response = await axios.post(
+      const response = await axios.post<ImageChangeResponse>(
         `/api/auth/add-profile-image`,
         formData,
         {
@@ -116,9 +117,12 @@ const page = () => {
         }
       );
 
-      if (response.status === 200 && response.data.image) {
+      if (response.status === 200 && response.data.profileImage) {
         if (userInfo) {
-          setUserInfo({ ...userInfo, profileImage: response.data.image });
+          setUserInfo({
+            ...userInfo,
+            profileImage: response.data.profileImage,
+          });
           toast.success("Image Uploaded Successfully");
         }
       }

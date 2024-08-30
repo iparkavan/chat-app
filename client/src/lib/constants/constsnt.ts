@@ -8,4 +8,6 @@ export const bgColors = [
 ];
   
 export const randomIndex = Math.floor(Math.random() * bgColors.length);
+
+export const HOST = "http://localhost:4000";
   
