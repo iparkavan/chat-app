@@ -7,7 +7,9 @@ const ChatUsersContainer = () => {
     <div className="relative">
       <ChatUserHeader />
       {/* Current Chat Users will be displayed here */}
-      <section className="p-2 overflow-auto h-[calc(100vh-17vh)]">
+      <section className="p-2 overflow-auto h-[calc(95vh-5vh)]">
+        <Heading heading="Direct Message" />
+
         <ChatUserCard />
         <ChatUserCard />
         <ChatUserCard />
@@ -15,26 +17,9 @@ const ChatUsersContainer = () => {
         <ChatUserCard />
         <ChatUserCard />
         <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
-        <ChatUserCard />
+
+        <Heading heading="Channels" />
+
         <ChatUserCard />
         <ChatUserCard />
         <ChatUserCard />
@@ -89,3 +74,11 @@ const ChatUsersContainer = () => {
 };
 
 export default ChatUsersContainer;
+
+const Heading = ({ heading }: { heading: string }) => {
+  return (
+    <h6 className="uppercase tracking-widest text-muted-foreground p-2 font-light text-sm">
+      {heading}
+    </h6>
+  );
+};

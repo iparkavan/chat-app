@@ -12,11 +12,11 @@ const ChatHeader = () => {
   const { userInfo } = useAuthslice();
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex h-[6vh] items-center justify-between">
       <div className="flex items-center justify-start gap-4">
         <div className="relative">
           {userInfo?.profileImage ? (
-            <Avatar>
+            <Avatar className="h-12 w-12">
               <AvatarImage
                 src={`${HOST}/${userInfo?.profileImage}` || ""}
                 alt="profile"

@@ -7,7 +7,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
-import { useLogin } from "@/features/authentication/hooks/authentication-hooks";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -15,9 +14,7 @@ import {
   loginSchema,
 } from "@/features/authentication/schemas/login-schema";
 import { ReloadIcon } from "@radix-ui/react-icons";
-// import { useAuth } from "@/store/auth-store";
 import { useRouter } from "next/navigation";
-import { signInWithGoogle } from "@/lib/authentications";
 import { useAuthslice } from "@/store/slices/auth-slice";
 import { axios } from "@/lib/axios";
 import { LoginResponse } from "@/features/authentication/types/authentication-type";
@@ -26,7 +23,6 @@ import { routes } from "@/lib/constants/routes";
 const page = () => {
   const router = useRouter();
 
-  const { isPending } = useLogin();
   const { setUserInfo } = useAuthslice();
   // const { login } = useAuth();
 
@@ -120,8 +116,8 @@ const page = () => {
             )}
           </div>
 
-          <Button disabled={isPending} type="submit" className="w-full">
-            {isPending && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+          <Button type="submit" className="w-full">
+            {/* <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> */}
             Login
           </Button>
         </form>

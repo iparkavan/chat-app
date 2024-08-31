@@ -10,7 +10,7 @@ const ChatUserCard = () => {
   const { userInfo } = useAuthslice();
 
   return (
-    <div className="flex w-full hover:bg-muted rounded-2xl p-2 items-center justify-between">
+    <div className="flex w-full cursor-pointer hover:bg-muted rounded-2xl p-2 items-center justify-between">
       <div className="flex items-center justify-start gap-4">
         {userInfo?.profileImage ? (
           <Avatar>

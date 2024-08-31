@@ -28,7 +28,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { toast } from "sonner";
 
-const page = () => {
+const ProfileSetup = () => {
   const router = useRouter();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -41,8 +41,6 @@ const page = () => {
   const [bgColor, setBgColor] = useState<number>(randomIndex);
 
   const { userInfo, setUserInfo } = useAuthslice();
-  console.log(userInfo)
-  console.log(image);
 
   const {
     handleSubmit,
@@ -61,14 +59,20 @@ const page = () => {
     if (userInfo?.profileImage) {
       setImage(`${HOST}/${userInfo.profileImage}`);
     }
-  }, []);
+  }, [
+    userInfo?.profileSetup,
+    userInfo?.profileImage,
+    userInfo?.bgColor,
+    userInfo?.firstName,
+    userInfo?.lastName,
+  ]);
 
   useEffect(() => {
     if (userInfo?.profileSetup) {
       toast("Please setup your profile to continue.");
       router.push(routes.chatPage);
     }
-  }, [userInfo?.profileSetup]);
+  }, [userInfo?.profileSetup, router]);
 
   const onProfileSetupSubmit: SubmitHandler<ProfileSetupFields> = async ({
     firstName,
@@ -296,4 +300,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ProfileSetup;
