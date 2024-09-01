@@ -13,7 +13,7 @@ const ChatUserCard = () => {
     <div className="flex w-full cursor-pointer hover:bg-muted rounded-2xl p-2 items-center justify-between">
       <div className="flex items-center justify-start gap-4">
         {userInfo?.profileImage ? (
-          <Avatar>
+          <Avatar className="h-12 w-12">
             <AvatarImage
               src={`${HOST}/${userInfo?.profileImage}` || ""}
               alt="profile"
@@ -21,7 +21,7 @@ const ChatUserCard = () => {
             />
           </Avatar>
         ) : (
-          <Avatar>
+          <Avatar className="h-12 w-12">
             <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
           </Avatar>
         )}

@@ -43,13 +43,13 @@ export default function Home() {
         </div>
       </div> */}
       <div className="flex min-h-[95vh]">
-        <div className="border-r">
+        <div className="border-r hidden sm:block">
           <Sidebar />
         </div>
-        <div className="border-r min-w-[400px]">
+        <div className="border-r w-full md:w-[700px]">
           <ChatUsersContainer />
         </div>
-        <div className="w-full">
+        <div className="w-full hidden sm:block">
           {isChatting ? (
             <div className="flex items-center justify-center h-full">
               <WelcomeContainer />
