@@ -127,7 +127,7 @@ export const updateProfile: ExpressHandler = async (req, res, next) => {
     const userInfo = await User.findByIdAndUpdate(
       req.userId,
       { firstName, lastName, bgColor, profileSetup: true },
-      { new: true, runValidators: true },
+      { new: true, runValidators: true }
     );
 
     if (!userInfo)
@@ -153,12 +153,6 @@ export const addProfileImage: ExpressHandler = async (req, res, next) => {
       return res.status(400).send("Image File is required");
     }
 
-    // const date = Date.now();
-
-    // let fileName = "src/uploads/profiles/" + date + req.file.originalname;
-
-    // renameSync(req.file.path, fileName);
-
     const date = Date.now();
 
     let fileName = `src/uploads/profiles/${date}-${req.file.originalname}`;
@@ -167,7 +161,7 @@ export const addProfileImage: ExpressHandler = async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.userId,
       { profileImage: fileName },
-      { new: true, runValidators: true },
+      { new: true, runValidators: true }
     );
 
     return res.status(200).json({

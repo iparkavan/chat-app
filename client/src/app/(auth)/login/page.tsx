@@ -38,7 +38,6 @@ const page = () => {
       { email, password },
       { withCredentials: true }
     );
-    console.log(data);
 
     if (data) {
       setUserInfo({

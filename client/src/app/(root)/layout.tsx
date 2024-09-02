@@ -20,7 +20,7 @@ export default function RootLayout({
       {/* <div className="fixed w-screen h-14 sh border-b rounded-b-2xl backdrop-blur-md px-8">
         <Navbar />
       </div> */}
-      <div className="m-5 min-h-[95vh] border rounded-2xl">
+      <div className="xl:m-5 min-h-[95vh] border rounded-2xl">
         {/* <div className="w-12 shadow-sm fixed min-h-[calc(100vh-70px)] rounded-2xl">
           <Sidebar />
         </div> */}

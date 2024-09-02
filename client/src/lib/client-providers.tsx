@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { axios } from "./axios";
 import { useAuthslice } from "@/store/slices/auth-slice";
+import RootLoading from "@/app/loading";
 
 const ClientProviders = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -34,7 +35,7 @@ const ClientProviders = ({ children }: { children: React.ReactNode }) => {
   }, [userInfo, setUserInfo]);
 
   if (isLoading) {
-    return <div>Loading...ding...</div>;
+    return <RootLoading />;
   }
 
   return <div>{children}</div>;
