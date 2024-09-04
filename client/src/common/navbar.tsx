@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
-import { ThemeModeToggle } from "@/features/dashboard/components/theme-mode-menu";
+import { ThemeModeToggle } from "@/common/theme-mode-menu";
 
 const Navbar = () => {
 

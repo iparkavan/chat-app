@@ -1,25 +1,17 @@
-import React from 'react'
+import React from "react";
+import ProfileInfo from "./profile-info";
 
 const Sidebar = () => {
   return (
-    <div>Sidebar</div>
-  )
-}
+    <div className="p-2 min-w-16">
+      <div className="">
+        <ProfileInfo />
+      </div>
+    </div>
+  );
+};
 
-export default Sidebar
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default Sidebar;
 
 // ------------------------------------------------------------
 

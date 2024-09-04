@@ -8,25 +8,64 @@ import { useRouter } from "next/navigation";
 import { routes } from "@/lib/constants/routes";
 import { toast } from "sonner";
 import WelcomeContainer from "@/features/chat-room/components/right-container/welcome-container";
-import Sidebar from "@/common/sidebar";
+import Sidebar from "@/features/sidebar/sidebar";
+import { useChatSlice } from "@/store/slices/chat-slice";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   const router = useRouter();
   const isChatting = false;
 
   const { userInfo } = useAuthslice();
+  const { selectedChatData } = useChatSlice();
 
-  useEffect(() => {
-    if (!userInfo?.profileSetup) {
-      toast("Please setup your profile to continue.");
-      router.push(routes.profileSetup);
-    }
-  }, [userInfo?.profileSetup, router]);
+  // useEffect(() => {
+  //   if (!userInfo?.profileSetup) {
+  //     toast("Please setup your profile to continue.");
+  //     router.push(routes.profileSetup);
+  //   }
+  // }, [userInfo?.profileSetup, router]);
 
   return (
     <main className="">
-      {/* <ResizableMainContent children={undefined} /> */}
-      {/* <div className="grid grid-cols-4 border rounded-2xl">
+      <div className="flex min-h-[95vh]">
+        <div className="border-r hidden sm:block">
+          <Sidebar />
+        </div>
+        <div
+          className={cn(
+            `border-r w-full md:w-[700px]`,
+            selectedChatData === undefined ? "block" : "hidden"
+          )}
+        >
+          <ChatUsersContainer />
+        </div>
+        <div
+          className={cn(
+            "w-full hidden sm:block",
+            selectedChatData === undefined ? "hidden" : "block"
+          )}
+        >
+          {selectedChatData === undefined ? (
+            <div className="">
+              <WelcomeContainer />
+            </div>
+          ) : (
+            <div className="">
+              <ChatContainer />
+            </div>
+          )}
+        </div>
+      </div>
+    </main>
+  );
+}
+
+{
+  /* <ResizableMainContent children={undefined} /> */
+}
+{
+  /* <div className="grid grid-cols-4 border rounded-2xl">
         <div className="border-r">
           <ChatUsersContainer />
         </div>
@@ -41,26 +80,5 @@ export default function Home() {
             </div>
           )}
         </div>
-      </div> */}
-      <div className="flex min-h-[95vh]">
-        <div className="border-r hidden sm:block">
-          <Sidebar />
-        </div>
-        <div className="border-r w-full md:w-[700px]">
-          <ChatUsersContainer />
-        </div>
-        <div className="w-full hidden sm:block">
-          {isChatting ? (
-            <div className="flex items-center justify-center h-full">
-              <WelcomeContainer />
-            </div>
-          ) : (
-            <div className="">
-              <ChatContainer />
-            </div>
-          )}
-        </div>
-      </div>
-    </main>
-  );
+      </div> */
 }

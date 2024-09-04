@@ -10,15 +10,16 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname === "/login" ||
     request.nextUrl.pathname === "/signup";
 
-  if (publicRoutes && token) {
-    return NextResponse.redirect(new URL(routes.chatPage, nextUrl));
+  if (publicRoutes) {
+    if (token) {
+      return NextResponse.redirect(new URL(routes.chatPage, nextUrl));
+    }
   } else {
     if (!token) {
       return NextResponse.redirect(new URL(routes.login, nextUrl));
     }
   }
 }
-
 
 export const config = {
   matcher: ["/", "/login", "/signup"],

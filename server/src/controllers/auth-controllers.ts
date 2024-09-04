@@ -194,3 +194,12 @@ export const removeProfileImage: ExpressHandler = async (req, res, next) => {
     res.status(400).json({ message: "Unable to remove the profile image" });
   }
 };
+
+export const logout: ExpressHandler = async (req, res, next) => {
+  try {
+   res.cookie(ACCESS_TOKEN, "", {maxAge: 1, secure: true, sameSite: 'none'})
+    return res.status(200).send("Logout Successfull");
+  } catch (error) {
+    res.status(500).json({ message: "There is a problem with logging out" });
+  }
+};
