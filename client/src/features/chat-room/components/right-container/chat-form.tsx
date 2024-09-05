@@ -1,8 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ChevronRightIcon } from "@radix-ui/react-icons";
 import React, {
   ChangeEvent,
   FormEvent,
@@ -15,10 +13,18 @@ import { RiEmojiStickerLine } from "react-icons/ri";
 import { IoSend } from "react-icons/io5";
 import EmojiPicker, { Theme } from "emoji-picker-react";
 import { useTheme } from "next-themes";
+import { useChatSlice } from "@/store/slices/chat-slice";
+import { useSocket } from "@/context/socket-context";
+import { useAuthslice } from "@/store/slices/auth-slice";
 
 const ChatForm = () => {
   const emojiRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
+
+  const socket = useSocket();
+
+  const { selectedChatData, selectedChatType } = useChatSlice();
+  const { userInfo } = useAuthslice();
 
   const [message, setMessage] = useState<string>("");
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState<boolean>(false);
@@ -46,14 +52,22 @@ const ChatForm = () => {
   };
 
   // Function for sending the messages
-  const messageHandler = (e: FormEvent) => {
+  const sendMessageHandler = (e: FormEvent) => {
     e.preventDefault();
-    alert(message);
+    if (selectedChatType === "contact") {
+      socket?.emit("sendMessage", {
+        sender: userInfo?.id,
+        content: message,
+        recipient: selectedChatData?._id,
+        messageType: "text",
+        fileUrl: undefined,
+      });
+    }
     setMessage("");
   };
 
   return (
-    <div className="flex items-center justify-start gap-2 h-[4.8vh] relative">
+    <div className="flex items-center justify-start gap-2 p-1 relative">
       <div className="flex items-center justify-center gap-1">
         <Button
           variant={"ghost"}
@@ -83,7 +97,7 @@ const ChatForm = () => {
           />
         </div>
       </div>
-      <form className="w-full flex items-center" onSubmit={messageHandler}>
+      <form className="w-full flex items-center" onSubmit={sendMessageHandler}>
         <input
           className="flex w-full rounded-md bg-transparent px-3 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
           onChange={(e: ChangeEvent<HTMLInputElement>) =>

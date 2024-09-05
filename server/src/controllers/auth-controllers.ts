@@ -56,8 +56,6 @@ export const login: ExpressHandler = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    console.log(password);
-
     if (!email || !password) {
       return res.status(400).send("Email and password is required");
     }

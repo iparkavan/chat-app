@@ -29,20 +29,20 @@ export default function Home() {
   return (
     <main className="">
       <div className="flex min-h-[95vh]">
-        <div className="border-r hidden sm:block">
+        <div className="border-r hidden md:block">
           <Sidebar />
         </div>
         <div
           className={cn(
-            `border-r w-full md:w-[700px]`,
-            selectedChatData === undefined ? "block" : "hidden"
+            `border-r w-full md:w-[600px] `,
+            selectedChatData === undefined ? "block" : "hidden md:block"
           )}
         >
           <ChatUsersContainer />
         </div>
         <div
           className={cn(
-            "w-full hidden sm:block",
+            "w-full",
             selectedChatData === undefined ? "hidden" : "block"
           )}
         >

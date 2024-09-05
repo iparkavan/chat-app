@@ -12,16 +12,16 @@ import { RiCloseFill } from "react-icons/ri";
 
 const ChatHeader = () => {
   const { userInfo } = useAuthslice();
-  const { closeChat } = useChatSlice();
+  const { closeChat, selectedChatData } = useChatSlice();
 
   return (
-    <div className="flex h-[6vh] items-center justify-between">
+    <div className="flex p-2 items-center justify-between">
       <div className="flex items-center justify-start gap-4">
         <div className="relative">
-          {userInfo?.profileImage ? (
+          {selectedChatData?.profileImage ? (
             <Avatar className="h-12 w-12">
               <AvatarImage
-                src={`${HOST}/${userInfo?.profileImage}` || ""}
+                src={`${HOST}/${selectedChatData?.profileImage}` || ""}
                 alt="profile"
                 className="object-cover w-full h-full"
               />
@@ -31,24 +31,27 @@ const ChatHeader = () => {
               <div
                 className={`uppercase text-white h-12 w-12 text-lg border flex items-center justify-center rounded-full`}
                 style={{
-                  backgroundColor: bgColors[userInfo?.bgColor as number],
+                  backgroundColor:
+                    bgColors[selectedChatData?.bgColor as number],
                   transition: "all .3s",
                 }}
               >
-                {userInfo?.firstName && userInfo.lastName
-                  ? `${userInfo?.firstName.split("").shift()}${userInfo.lastName
+                {selectedChatData?.firstName && selectedChatData.lastName
+                  ? `${selectedChatData?.firstName
                       .split("")
-                      .shift()}`
-                  : userInfo?.email?.split("").shift()}
+                      .shift()}${selectedChatData.lastName.split("").shift()}`
+                  : selectedChatData?.email?.split("").shift()}
               </div>
             </>
           )}
         </div>
         <div>
           <div>
-            <p className="font-semibold text-sm">{userInfo?.firstName}</p>
+            <p className="font-semibold text-sm">
+              {selectedChatData?.firstName} {selectedChatData?.lastName}
+            </p>
             {/* <span className="text-xs text-green-700 font-semibold">
-                Typing...
+                Typing...pac
               </span> */}
           </div>
         </div>

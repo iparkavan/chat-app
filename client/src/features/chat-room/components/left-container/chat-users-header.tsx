@@ -25,6 +25,7 @@ import { useAuthslice } from "@/store/slices/auth-slice";
 import { bgColors, HOST } from "@/lib/constants/constsnt";
 import { ContactsTypes } from "@/types/contacts-types";
 import { useChatSlice } from "@/store/slices/chat-slice";
+import { UserInfoTypes } from "@/types/authentication-types";
 
 const ChatUserHeader = () => {
   const { setSelectedChatType, setSelectedChatData } = useChatSlice();
@@ -56,17 +57,17 @@ const ChatUserHeader = () => {
   };
 
   const selectNewContact = (contact: ContactsTypes) => {
-    setIsNewContactModal(false);
     setSelectedChatType("contact");
     setSelectedChatData(contact);
     setSearchedContacts([]);
+    setIsNewContactModal(false);
   };
 
   return (
     <div className="p-3 rounded-t-2xl flex items-center justify-between">
       <h1 className="text-3xl font-bold">Chats</h1>
 
-      <TooltipProvider>
+      {/* <TooltipProvider>
         <Tooltip>
           <TooltipTrigger>
             <Button
@@ -81,10 +82,27 @@ const ChatUserHeader = () => {
             <p>Select New Contact</p>
           </TooltipContent>
         </Tooltip>
-      </TooltipProvider>
+      </TooltipProvider> */}
 
       <Dialog open={isNewContactModal} onOpenChange={setIsNewContactModal}>
-        {/* <DialogTrigger>Open</DialogTrigger> */}
+        <DialogTrigger>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant={"ghost"}
+                  size={"icon"}
+                  // onClick={() => setIsNewContactModal(true)}
+                >
+                  <FaPlus className="" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Select New Contact</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </DialogTrigger>
         <DialogContent className="flex flex-col h-[600px]">
           <DialogHeader>
             <DialogTitle>Please select a contact</DialogTitle>
@@ -97,17 +115,15 @@ const ChatUserHeader = () => {
             />
           </div>
           <ScrollArea className="h-[350px]">
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col">
               {searchedContacts.length > 0 &&
                 searchedContacts?.map((contact) => (
                   <div
+                    key={contact._id}
                     className="flex items-center cursor-pointer hover:bg-primary-foreground p-3 rounded-xl justify-start gap-4"
                     onClick={() => selectNewContact(contact)}
                   >
-                    <Avatar
-                      key={contact._id}
-                      className="flex items-center gap-3 cursor-pointer"
-                    >
+                    <Avatar className="flex items-center gap-3 cursor-pointer">
                       {contact?.profileImage ? (
                         <div className="h-12 w-12">
                           <AvatarImage
