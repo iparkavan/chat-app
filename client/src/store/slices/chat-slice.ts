@@ -1,5 +1,6 @@
 import { UserInfoTypes } from "@/types/authentication-types";
 import { ContactsTypes } from "@/types/contacts-types";
+import { MessagesTypes } from "@/types/messages";
 import { create } from "zustand";
 
 type ChatTypes = "channel" | "contact";
@@ -7,10 +8,10 @@ type ChatTypes = "channel" | "contact";
 type ChatSliceTypes = {
   selectedChatType: ChatTypes | undefined;
   selectedChatData: ContactsTypes | undefined;
-  selectedChatMessages: [] | any;
+  selectedChatMessages: MessagesTypes[] | any;
   setSelectedChatType: (selectedChatType: ChatTypes) => void;
   setSelectedChatData: (selectedChatData: ContactsTypes) => void;
-  setSelectedChatMessages: () => void;
+  setSelectedChatMessages: (selectedChatMessages: MessagesTypes) => void;
   closeChat: () => void;
   addMessage: (message: any) => void;
 };
@@ -19,9 +20,12 @@ export const useChatSlice = create<ChatSliceTypes>()((set, get) => ({
   selectedChatType: undefined,
   selectedChatData: undefined,
   selectedChatMessages: [],
-  setSelectedChatType: (selectedChatType: ChatTypes) => set({ selectedChatType}),
-  setSelectedChatData: (selectedChatData: ContactsTypes) => set({ selectedChatData }),
-  setSelectedChatMessages: (selectedChatMessages) => set({ selectedChatMessages }),
+  setSelectedChatType: (selectedChatType: ChatTypes) =>
+    set({ selectedChatType }),
+  setSelectedChatData: (selectedChatData: ContactsTypes) =>
+    set({ selectedChatData }),
+  setSelectedChatMessages: (selectedChatMessages: MessagesTypes) =>
+    set({ selectedChatMessages }),
   closeChat: () =>
     set({
       selectedChatType: undefined,

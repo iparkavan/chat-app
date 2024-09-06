@@ -25,9 +25,9 @@ import { useAuthslice } from "@/store/slices/auth-slice";
 import { bgColors, HOST } from "@/lib/constants/constsnt";
 import { ContactsTypes } from "@/types/contacts-types";
 import { useChatSlice } from "@/store/slices/chat-slice";
-import { UserInfoTypes } from "@/types/authentication-types";
 
 const ChatUserHeader = () => {
+  
   const { setSelectedChatType, setSelectedChatData } = useChatSlice();
 
   const [isNewContactModal, setIsNewContactModal] = useState(false);

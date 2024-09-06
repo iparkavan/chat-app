@@ -2,6 +2,7 @@ import { Server } from "http";
 import { Server as SockeIOServer, Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import Message from "./models/messages-model";
+import { MessagesTypes } from "./types/constant";
 
 const SetupSocket = (server: Server) => {
   const io = new SockeIOServer(server, {
@@ -28,7 +29,7 @@ const SetupSocket = (server: Server) => {
   };
 
   // Function for sending the message from server to client
-  const sendMessage = async (message: { sender: any; recipient: any }) => {
+  const sendMessage = async (message: MessagesTypes) => {
     const senderSocketId = userSocketMap.get(message.sender);
     const recipientSocketId = userSocketMap.get(message.recipient);
 
@@ -39,7 +40,7 @@ const SetupSocket = (server: Server) => {
       .populate(
         "recipient",
         "id email firstName lastName profileImage bgColor"
-      );
+      );     
 
     if (recipientSocketId) {
       io.to(recipientSocketId).emit("recieveMessage", messageData);
@@ -61,6 +62,7 @@ const SetupSocket = (server: Server) => {
     }
 
     socket.on("sendMessage", sendMessage);
+
     socket.on("disconnect", () => disconnect(socket));
   });
 };

@@ -6,7 +6,7 @@ export type senderReciver = {
   lastName: string;
 };
 
-export type Messages = {
+export type MessagesTypes = {
   _id: string;
   sender: senderReciver;
   recipient: senderReciver;
