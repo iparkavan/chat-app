@@ -63,14 +63,14 @@ const ChatForm = () => {
         fileUrl: undefined,
       });
     }
-    
-    setMessage(""); 
+
+    setMessage("");
   };
 
   return (
     <div className="flex items-center justify-start gap-2 p-1 relative">
       <div className="flex items-center justify-center gap-1">
-        <Button 
+        <Button
           variant={"ghost"}
           type="submit"
           size={"icon"}
