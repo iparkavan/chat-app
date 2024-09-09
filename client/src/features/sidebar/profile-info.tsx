@@ -1,3 +1,4 @@
+import { ThemeModeToggle } from "@/common/theme-mode-menu";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,8 +44,8 @@ const ProfileInfo = () => {
           <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
         </Avatar>
       </div>
-      <div className="absolute bottom-9 space-y-3">
-        <div className="flex items-center justify-center">
+      <div className="absolute bottom-9 space-y-3 text-center">
+        <div>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -57,6 +58,9 @@ const ProfileInfo = () => {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+        </div>
+        <div>
+          <ThemeModeToggle />
         </div>
         <div>
           {userInfo?.profileImage ? (

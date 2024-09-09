@@ -8,8 +8,8 @@ export type senderReciver = {
 
 export type MessagesTypes = {
   _id: string;
-  sender: senderReciver;
-  recipient: senderReciver;
+  sender: string;
+  recipient: string;
   messageType: string;
   content: string;
   timestamp: string;

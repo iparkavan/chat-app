@@ -21,11 +21,19 @@ declare module "express-serve-static-core" {
 //   lastName: string;
 // };
 
+// _id: string;
+// sender: string;
+// recipient: string;
+// messageType: string;
+// content: string | undefined;
+// fileUrl: string | undefined;
+
 export type MessagesTypes = {
   _id: string;
   sender: string;
   recipient: string;
-  messageType: string;
+  messageType: "text" | "file";
   content: string | undefined;
-  fileUrl: string | undefined,
+  fileUrl: string | undefined;
+  timestamp: string;
 };

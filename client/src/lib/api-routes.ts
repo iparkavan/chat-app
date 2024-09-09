@@ -1,7 +1,9 @@
-const CONTACTSAPI = `/api/contacts`
+// export const HOST = process.env.NEXT_PUBLIC_NODE_BACKEND_URL;
 
-const SEARCHCONTACTSROUTES = `${CONTACTSAPI}/search`
+const CONTACTSAPI = `/api/contacts`;
+const SEARCHCONTACTSROUTES = `${CONTACTSAPI}/search`;
 
-export {
-  SEARCHCONTACTSROUTES
-}
+const MESSAGESAPI = `/api/messages`;
+const GETALLMESSAGESROUTES = `${MESSAGESAPI}/get-messages`;
+
+export { SEARCHCONTACTSROUTES, GETALLMESSAGESROUTES };

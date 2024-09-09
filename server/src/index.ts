@@ -5,9 +5,10 @@ import mongoose from "mongoose";
 import authRoutes from "./routes/auth-routes";
 import cookieParser from "cookie-parser";
 import path from "path";
-import contactRoutes from "./routes/contact-routes";
+import contactRoutes from "./routes/contacts-routes";
 import SetupSocket from "./socket";
 import { Server, IncomingMessage, ServerResponse } from "http";
+import messageRoutes from "./routes/messages-routes";
 
 dotenv.config();
 
@@ -40,12 +41,13 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactRoutes);
+app.use("/api/messages", messageRoutes);
 
 const server: Server = app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
 
-SetupSocket(server)
+SetupSocket(server);
 // console.log(process.env.DATABASE_URL as string)
 
 mongoose
