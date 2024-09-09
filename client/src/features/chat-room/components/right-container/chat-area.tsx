@@ -85,13 +85,13 @@ const ChatArea = () => {
             `inline-block p-4 rounded-2xl my-1 max-w-[50%] break-words`,
             message.sender !== selectedChatData?._id
               ? "bg-primary text-white dark:bg-primary dark:text-black"
-              : "bg-white text-primary dark:text-primary dark:bg-black"
+              : "bg-primary-foreground text-primary dark:text-primary"
           )}
         >
           {message.content}
         </div>
       )}
-      <div className="text-xs text-muted-foreground">
+      <div className="text-xs px-3 text-muted-foreground">
         {moment(message.timestamp).format("LT")}
       </div>
     </div>
