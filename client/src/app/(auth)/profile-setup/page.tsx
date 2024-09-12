@@ -1,5 +1,6 @@
 "use client";
 
+import RootLoading from "@/app/loading";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +35,7 @@ const ProfileSetup = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isUserInfoLoading, setIsUserInfoLoading] = useState(true);
   const [image, setImage] = useState<string | undefined>(undefined);
   const [firstName, setFirstName] = useState<string | null>(null);
   const [lastName, setLastName] = useState<string | null>(null);
@@ -49,6 +51,13 @@ const ProfileSetup = () => {
   } = useForm<ProfileSetupFields>({
     resolver: zodResolver(profileSetupSchema),
   });
+
+  useEffect(() => {
+    if (userInfo?.profileSetup) {
+      toast("Please setup your profile to continue.");
+      router.push(routes.chatPage);
+    }
+  }, [userInfo?.profileSetup, router]);
 
   useEffect(() => {
     if (userInfo?.profileSetup) {
@@ -68,11 +77,33 @@ const ProfileSetup = () => {
   ]);
 
   useEffect(() => {
-    if (userInfo?.profileSetup) {
-      toast("Please setup your profile to continue.");
-      router.push(routes.chatPage);
+    const getUserInfo = async () => {
+      try {
+        const response = await axios.get(`/api/auth/get-userinfo`, {
+          withCredentials: true,
+        });
+        if (response?.status === 200 && response.data.id) {
+          setUserInfo(response.data);
+        } else {
+          setUserInfo(undefined);
+        }
+      } catch (error) {
+        setUserInfo(undefined);
+      } finally {
+        setIsUserInfoLoading(false);
+      }
+    };
+
+    if (!userInfo) {
+      getUserInfo();
+    } else {
+      setIsUserInfoLoading(false);
     }
-  }, [userInfo?.profileSetup, router]);
+  }, [userInfo, setUserInfo]);
+
+  if (isUserInfoLoading) {
+    return <RootLoading />;
+  }
 
   const onProfileSetupSubmit: SubmitHandler<ProfileSetupFields> = async ({
     firstName,

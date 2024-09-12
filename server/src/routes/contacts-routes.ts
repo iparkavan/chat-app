@@ -1,10 +1,13 @@
 import Router from "express";
 import { verifyToken } from "../middlewares/auth-middleware";
-import { searchContacts } from "../controllers/contacts-controllers";
+import {
+  getContactsForDmList,
+  searchContacts,
+} from "../controllers/contacts-controllers";
 
+const contactRoutes = Router();
 
-const contactRoutes = Router()
+contactRoutes.post("/search", verifyToken, searchContacts);
+contactRoutes.get("/get-contact-for-dm", verifyToken, getContactsForDmList);
 
-contactRoutes.post('/search', verifyToken, searchContacts )
-
-export default contactRoutes
+export default contactRoutes;

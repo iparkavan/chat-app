@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { ExpressHandler } from "../types/constant";
+import { ACCESS_TOKEN, ExpressHandler } from "../types/constant";
 import { compare } from "bcrypt";
 import User from "../models/user-model";
 import { renameSync, unlinkSync } from "fs";
@@ -11,7 +11,6 @@ const createToken = (email: string, userId: string) => {
   return jwt.sign({ email, userId }, JWT_KEY, { expiresIn: maxAge });
 };
 
-export const ACCESS_TOKEN = "__access-token";
 
 export const signup: ExpressHandler = async (req, res, next) => {
   try {

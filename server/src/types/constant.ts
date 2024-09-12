@@ -1,6 +1,8 @@
 import { DecodedIdToken } from "firebase-admin/auth";
 import { NextFunction, Request, Response } from "express";
 
+export const ACCESS_TOKEN = "__access-token";
+
 export type ExpressHandler = (
   req: Request,
   res: Response,
@@ -37,3 +39,13 @@ export type MessagesTypes = {
   fileUrl: string | undefined;
   timestamp: string;
 };
+
+// types.d.ts
+
+declare global {
+  namespace Express {
+    interface Request {
+      userId?: string | DecodedIdToken; // Allow both string and DecodedIdToken types
+    }
+  }
+}

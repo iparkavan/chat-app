@@ -31,10 +31,10 @@ export default function CommonLayout({
         >
           <Providers>
             <SocketProvider>
-              <ClientProviders>
-                {children}
-                <Toaster closeButton />
-              </ClientProviders>
+              {/* <ClientProviders> */}
+              {children}
+              <Toaster closeButton />
+              {/* </ClientProviders> */}
             </SocketProvider>
           </Providers>
         </ThemeProvider>

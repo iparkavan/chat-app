@@ -1,8 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ChatUserHeader from "./chat-users-header";
 import ChatUserCard from "./chat-user-card";
+import { toast } from "sonner";
+import { axios } from "@/lib/axios";
+import { GET_DM_CONTACTS_ROUTES } from "@/lib/api-routes";
 
 const ChatUsersContainer = () => {
+
+  useEffect(() => {
+    const getContacts = async () => {
+      try {
+        const response = await axios.get(GET_DM_CONTACTS_ROUTES, {
+          withCredentials: true,
+        });
+
+        if (response.data.contacts) {
+          console.log(response.data.contacts);
+        }
+      } catch (error: any) {
+        console.log(error);
+        toast(error.message);
+      }
+    };
+    
+    getContacts();
+  }, []);
+
   return (
     <div className="relative">
       <ChatUserHeader />
