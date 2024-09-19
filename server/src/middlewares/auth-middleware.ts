@@ -3,7 +3,6 @@
 import { ACCESS_TOKEN, ExpressHandler } from "../types/constant";
 import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import { DecodedIdToken } from "firebase-admin/auth";
 
 export const verifyToken: ExpressHandler = async (
   req: Request,

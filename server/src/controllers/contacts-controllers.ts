@@ -2,7 +2,6 @@ import { ExpressHandler } from "../types/constant";
 import User from "../models/user-model";
 import Message from "../models/messages-model";
 import mongoose from "mongoose";
-import { DecodedIdToken } from "firebase-admin/auth";
 
 export const searchContacts: ExpressHandler = async (req, res, next) => {
   try {
@@ -34,14 +33,9 @@ export const searchContacts: ExpressHandler = async (req, res, next) => {
 
 export const getContactsForDmList: ExpressHandler = async (req, res, next) => {
   try {
-    let userId: DecodedIdToken | undefined = req.userId;
-
-    if (typeof userId === "string") {
-      userId = new mongoose.Types.ObjectId(userId);   
-    } else if (!(userId instanceof mongoose.Types.ObjectId)) {
-      throw new Error("Invalid userId type");
-    }
-
+    // let userId: string | undefined = req.userId;
+    const userId = new mongoose.Types.ObjectId(req.userId);
+    
     const contacts = await Message.aggregate([
       { $match: { $or: [{ sender: userId }, { recipient: userId }] } },
       { $sort: { timestamp: -1 } },
