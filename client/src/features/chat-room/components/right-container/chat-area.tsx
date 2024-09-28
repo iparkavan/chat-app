@@ -82,7 +82,7 @@ const ChatArea = () => {
       {message.messageType === "text" && (
         <div
           className={cn(
-            `inline-block p-4 rounded-2xl my-1 max-w-[50%] break-words`,
+            `inline-block p-2 rounded-2xl my-1 max-w-[50%] break-words`,
             message.sender !== selectedChatData?._id
               ? "bg-primary text-white dark:bg-primary dark:text-black"
               : "bg-primary-foreground text-primary dark:text-primary"

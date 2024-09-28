@@ -33,12 +33,21 @@ export const searchContacts: ExpressHandler = async (req, res, next) => {
 
 export const getContactsForDmList: ExpressHandler = async (req, res, next) => {
   try {
-    // let userId: string | undefined = req.userId;
-    const userId = new mongoose.Types.ObjectId(req.userId);
-    
+    let userId: mongoose.Types.ObjectId | undefined;
+
+    if (req.userId) {
+      userId = new mongoose.Types.ObjectId(req.userId);
+    }
+
     const contacts = await Message.aggregate([
-      { $match: { $or: [{ sender: userId }, { recipient: userId }] } },
-      { $sort: { timestamp: -1 } },
+      {
+        $match: {
+          $or: [{ sender: userId }, { recipient: userId }],
+        },
+      },
+      {
+        $sort: { timestamp: -1 },
+      },
       {
         $group: {
           _id: {
@@ -53,7 +62,7 @@ export const getContactsForDmList: ExpressHandler = async (req, res, next) => {
       },
       {
         $lookup: {
-          from: "user",
+          from: "users",
           localField: "_id",
           foreignField: "_id",
           as: "contactInfo",
@@ -71,9 +80,12 @@ export const getContactsForDmList: ExpressHandler = async (req, res, next) => {
           bgColor: "$contactInfo.bgColor",
         },
       },
+      {
+        $sort: { lastMessageTime: -1 },
+      },
     ]);
 
-    console.log(userId, contacts);
+    // console.log(userId, contacts);
 
     return res.status(200).json({ contacts });
   } catch (error: any) {
