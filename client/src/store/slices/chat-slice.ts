@@ -8,10 +8,12 @@ type ChatTypes = "channel" | "contact";
 type ChatSliceTypes = {
   selectedChatType: ChatTypes | undefined;
   selectedChatData: ContactsTypes | undefined;
-  selectedChatMessages: MessagesTypes[] | any;
+  selectedChatMessages: MessagesTypes[];
+  directMessagesContacts: ContactsTypes[];
   setSelectedChatType: (selectedChatType: ChatTypes) => void;
   setSelectedChatData: (selectedChatData: ContactsTypes) => void;
-  setSelectedChatMessages: (selectedChatMessages: MessagesTypes) => void;
+  setSelectedChatMessages: (selectedChatMessages: MessagesTypes[]) => void;
+  setDirectMessagesContacts: (directMessagesContacts: ContactsTypes[]) => void;
   closeChat: () => void;
   addMessage: (message: any) => void;
 };
@@ -20,12 +22,16 @@ export const useChatSlice = create<ChatSliceTypes>()((set, get) => ({
   selectedChatType: undefined,
   selectedChatData: undefined,
   selectedChatMessages: [],
+  directMessagesContacts: [],
+
   setSelectedChatType: (selectedChatType: ChatTypes) =>
     set({ selectedChatType }),
   setSelectedChatData: (selectedChatData: ContactsTypes) =>
     set({ selectedChatData }),
-  setSelectedChatMessages: (selectedChatMessages: MessagesTypes) =>
+  setSelectedChatMessages: (selectedChatMessages: MessagesTypes[]) =>
     set({ selectedChatMessages }),
+  setDirectMessagesContacts: (directMessagesContacts: ContactsTypes[]) =>
+    set({ directMessagesContacts }),
   closeChat: () =>
     set({
       selectedChatType: undefined,

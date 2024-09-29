@@ -5,8 +5,8 @@ import {
 } from "@/components/ui/resizable";
 import Sidebar from "../features/sidebar/sidebar";
 import React, { Children } from "react";
-import ChatUsersContainer from "@/features/chat-room/components/left-container/chat-users-container";
-import ChatContainer from "@/features/chat-room/components/right-container/chat-container";
+import ChatUsersContainer from "@/features/chat-room/left-container/chat-users-container";
+import ChatContainer from "@/features/chat-room/right-container/chat-container";
 
 export function ResizableMainContent({
   children,

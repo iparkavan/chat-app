@@ -1,13 +1,13 @@
 "use client";
 
-import ChatUsersContainer from "@/features/chat-room/components/left-container/chat-users-container";
-import ChatContainer from "@/features/chat-room/components/right-container/chat-container";
+import ChatUsersContainer from "@/features/chat-room/left-container/chat-users-container";
+import ChatContainer from "@/features/chat-room/right-container/chat-container";
 import { useAuthslice } from "@/store/slices/auth-slice";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { routes } from "@/lib/constants/routes";
 import { toast } from "sonner";
-import WelcomeContainer from "@/features/chat-room/components/right-container/welcome-container";
+import WelcomeContainer from "@/features/chat-room/right-container/welcome-container";
 import Sidebar from "@/features/sidebar/sidebar";
 import { useChatSlice } from "@/store/slices/chat-slice";
 import { cn } from "@/lib/utils";

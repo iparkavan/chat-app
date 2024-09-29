@@ -74,7 +74,7 @@ export const getContactsForDmList: ExpressHandler = async (req, res, next) => {
           _id: 1,
           lastMessageTime: 1,
           email: "$contactInfo.email",
-          fistName: "$contactInfo.fistName",
+          firstName: "$contactInfo.firstName",
           lastName: "$contactInfo.lastName",
           profileImage: "$contactInfo.profileImage",
           bgColor: "$contactInfo.bgColor",
