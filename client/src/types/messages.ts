@@ -12,5 +12,6 @@ export type MessagesTypes = {
   recipient: string;
   messageType: string;
   content: string;
+  fileUrl: string;
   timestamp: string;
 };

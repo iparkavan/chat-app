@@ -35,6 +35,7 @@ app.use(
 // app.use("/uploads/profiles", express.static("/uploads/profiles"));
 
 app.use("/src/uploads/profiles", express.static("src/uploads/profiles"));
+app.use("/src/uploads/files", express.static("src/uploads/files"));
 
 app.use(cookieParser());
 app.use(express.json());

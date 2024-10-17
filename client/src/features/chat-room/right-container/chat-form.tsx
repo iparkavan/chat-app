@@ -16,9 +16,13 @@ import { useTheme } from "next-themes";
 import { useChatSlice } from "@/store/slices/chat-slice";
 import { useSocket } from "@/context/socket-context";
 import { useAuthslice } from "@/store/slices/auth-slice";
+import { Input } from "@/components/ui/input";
+import { axios } from "@/lib/axios";
+import { UPLOAD_FILE_ROUTE } from "@/lib/api-routes";
 
 const ChatForm = () => {
   const emojiRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { theme } = useTheme();
 
   const socket = useSocket();
@@ -67,6 +71,43 @@ const ChatForm = () => {
     setMessage("");
   };
 
+  const attachmentClickHanlder = () => {
+    if (fileInputRef) {
+      fileInputRef.current?.click();
+    }
+  };
+
+  const attachmentChangeHandler = async (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    try {
+      const file = event.target.files?.[0];
+      // console.log(file);
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await axios.post(UPLOAD_FILE_ROUTE, formData, {
+          withCredentials: true,
+        });
+
+        if (response.status === 200 && response.data) {
+          if (selectedChatType === "contact") {
+            socket?.emit("sendMessage", {
+              sender: userInfo?.id,
+              content: undefined,
+              recipient: selectedChatData?._id,
+              messageType: "file",
+              fileUrl: response.data.filePath,
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="flex items-center justify-start gap-2 p-1 relative">
       <div className="flex items-center justify-center gap-1">
@@ -75,9 +116,16 @@ const ChatForm = () => {
           type="submit"
           size={"icon"}
           className="text-muted-foreground"
+          onClick={attachmentClickHanlder}
         >
           <GrAttachment className="text-xl" />
         </Button>
+        <Input
+          type="file"
+          className="hidden"
+          ref={fileInputRef}
+          onChange={attachmentChangeHandler}
+        />
         <Button
           variant={"ghost"}
           type="submit"

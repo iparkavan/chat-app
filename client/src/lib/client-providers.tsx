@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { axios } from "./axios";
 import { useAuthslice } from "@/store/slices/auth-slice";
-import RootLoading from "@/app/loading";
+import LottieLoading from "@/common/lottie-loading";
 
 const ClientProviders = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -35,10 +35,33 @@ const ClientProviders = ({ children }: { children: React.ReactNode }) => {
   }, [userInfo, setUserInfo]);
 
   if (isLoading) {
-    return <RootLoading />;
+    return <LottieLoading />;
   }
 
   return <div>{children}</div>;
 };
 
 export default ClientProviders;
+
+// import React from "react";
+// import Lottie from "react-lottie";
+// import animationData from "../lib/animationData.json";
+
+// const RootLoading = () => {
+//   const defaultOptions = {
+//     loop: true,
+//     autoplay: true,
+//     animationData: animationData,
+//     rendererSettings: {
+//       preserveAspectRatio: "xMidYMid slice",
+//     },
+//   };
+
+//   return (
+//     <div>
+//       <Lottie options={defaultOptions} height={400} width={400} />
+//     </div>
+//   );
+// };
+
+// export default RootLoading;
