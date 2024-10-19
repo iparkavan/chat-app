@@ -13,6 +13,7 @@ import { MdFolderZip } from "react-icons/md";
 import { IoMdArrowRoundDown } from "react-icons/io";
 import { Button } from "@/components/ui/button";
 import { IoCloseSharp } from "react-icons/io5";
+import { AxiosProgressEvent } from "axios";
 
 const ChatArea = () => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -25,6 +26,8 @@ const ChatArea = () => {
     selectedChatType,
     selectedChatMessages,
     setSelectedChatMessages,
+    setIsDownloading,
+    setFileDownloadProgress,
   } = useChatSlice();
 
   // useEffect to fetch all messages of the users
@@ -62,16 +65,32 @@ const ChatArea = () => {
   console.log(selectedChatMessages);
 
   // To Check if it is image
-  const checkIfImage = (filePath) => {
+  const checkIfImage = (filePath: string) => {
     const imageRegex =
       /\.(jpg|jpeg|png|gif|bmp|tiff|tif|webp|svg|ico|heic|heif)$/i;
     return imageRegex.test(filePath);
   };
 
   const downloadFile = async (url: string) => {
-    const response = await axios.get(`${HOST}/${url}`, {
-      responseType: "blob",
-    });
+    try {
+      setIsDownloading(true);
+      setFileDownloadProgress(0);
+      const response = await axios.get(`${HOST}/${url}`, {
+        responseType: "blob",
+        onDownloadProgress: (progressEvent: AxiosProgressEvent) => {
+          const { loaded, total } = progressEvent;
+          if (total) {
+            const percentCompleted = Math.round((loaded * 100) / total);
+            setFileDownloadProgress(percentCompleted);
+          }
+        },
+      });
+
+      setIsDownloading(false);
+    } catch (error) {
+      setIsDownloading(false);
+      console.log(error);
+    }
 
     const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement("a");
@@ -176,12 +195,12 @@ const ChatArea = () => {
   );
 
   return (
-    <div className="h-[85vh] overflow-y-scroll w-full">
+    <div className="h-[88vh] overflow-y-scroll w-full">
       <div className="mx-8 my-2">
         {renderMessages()}
         <div ref={scrollRef} />
         {showImage && (
-          <div className="fixed z-[1000] top-0 left-0 h-[100vh] w-[100vw] flex items-center justify-center backdrop-blur-lg">
+          <div className="fixed z-10 top-0 left-0 h-[100vh] w-[100vw] flex items-center justify-center backdrop-blur-lg">
             <div className="w-[80vw] relative h-[80vh]">
               <Image
                 className="rounded-lg"

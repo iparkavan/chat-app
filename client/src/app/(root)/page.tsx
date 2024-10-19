@@ -17,6 +17,13 @@ export default function Home() {
   const isChatting = false;
 
   const { userInfo } = useAuthslice();
+  const {
+    isUploading,
+    isDownloading,
+    fileUploadProgress,
+    fileDownloadProgress,
+  } = useChatSlice();
+
   const { selectedChatData } = useChatSlice();
 
   // useEffect(() => {
@@ -27,35 +34,45 @@ export default function Home() {
   // }, [userInfo?.profileSetup, router]);
 
   return (
-    <main className="">
-      <div className="flex min-h-[95vh]">
-        <div className="border-r hidden md:block">
-          <Sidebar />
+    <main className="flex">
+      {isUploading && (
+        <div className="h-screen w-screen fixed top-0 z-20 left-0 bg-black/80 flex items-center justify-center flex-col gap-5 backdrop-blur-lg">
+          <h5 className="text-white text-5xl">Uploading File</h5>
+          <p className="text-3xl text-white">{fileUploadProgress}%</p>
         </div>
-        <div
-          className={cn(
-            `border-r w-full md:w-[600px] `,
-            selectedChatData === undefined ? "block" : "hidden md:block"
-          )}
-        >
-          <ChatUsersContainer />
+      )}
+      {isDownloading && (
+        <div className="h-screen w-screen fixed top-0 z-20 left-0 bg-black/80 flex items-center justify-center flex-col gap-5 backdrop-blur-lg">
+          <h5 className="text-white text-5xl">Downloading File</h5>
+          <p className="text-3xl text-white">{fileDownloadProgress}%</p>
         </div>
-        <div
-          className={cn(
-            "w-full",
-            selectedChatData === undefined ? "hidden" : "block"
-          )}
-        >
-          {selectedChatData === undefined ? (
-            <div className="">
-              <WelcomeContainer />
-            </div>
-          ) : (
-            <div className="">
-              <ChatContainer />
-            </div>
-          )}
-        </div>
+      )}
+      <div className="border-r hidden md:block">
+        <Sidebar />
+      </div>
+      <div
+        className={cn(
+          `border-r w-full md:w-[600px] `,
+          selectedChatData === undefined ? "block" : "hidden md:block"
+        )}
+      >
+        <ChatUsersContainer />
+      </div>
+      <div
+        className={cn(
+          "w-full",
+          selectedChatData === undefined ? "hidden" : "block"
+        )}
+      >
+        {selectedChatData === undefined ? (
+          <div className="">
+            <WelcomeContainer />
+          </div>
+        ) : (
+          <div className="">
+            <ChatContainer />
+          </div>
+        )}
       </div>
     </main>
   );

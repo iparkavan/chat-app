@@ -19,6 +19,7 @@ import { useAuthslice } from "@/store/slices/auth-slice";
 import { Input } from "@/components/ui/input";
 import { axios } from "@/lib/axios";
 import { UPLOAD_FILE_ROUTE } from "@/lib/api-routes";
+import { AxiosProgressEvent } from "axios";
 
 const ChatForm = () => {
   const emojiRef = useRef<HTMLDivElement>(null);
@@ -27,7 +28,12 @@ const ChatForm = () => {
 
   const socket = useSocket();
 
-  const { selectedChatData, selectedChatType } = useChatSlice();
+  const {
+    selectedChatData,
+    selectedChatType,
+    setIsUploading,
+    setFileUploadProgress,
+  } = useChatSlice();
   const { userInfo } = useAuthslice();
 
   const [message, setMessage] = useState<string>("");
@@ -87,11 +93,20 @@ const ChatForm = () => {
         const formData = new FormData();
         formData.append("file", file);
 
+        setIsUploading(true);
         const response = await axios.post(UPLOAD_FILE_ROUTE, formData, {
           withCredentials: true,
+          onUploadProgress: (data: AxiosProgressEvent) => {
+            if (data && data.total) {
+              setFileUploadProgress(
+                Math.round((100 * data.loaded) / data.total)
+              );
+            }
+          },
         });
 
         if (response.status === 200 && response.data) {
+          setIsUploading(false);
           if (selectedChatType === "contact") {
             socket?.emit("sendMessage", {
               sender: userInfo?.id,
@@ -104,6 +119,7 @@ const ChatForm = () => {
         }
       }
     } catch (error) {
+      setIsUploading(false);
       console.log(error);
     }
   };

@@ -5,19 +5,19 @@ import ChatArea from "./chat-area";
 
 const ChatContainer = () => {
   return (
-    <div className="">
+    <section>
       <div className="px-8 border-b">
         <ChatHeader />
       </div>
 
-      <div className="flex items-center justify-center">
+      <div className="">
         <ChatArea />
       </div>
 
       <div className="px-2 border-t">
         <ChatForm />
       </div>
-    </div>
+    </section>
   );
 };
 

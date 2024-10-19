@@ -10,6 +10,15 @@ type ChatSliceTypes = {
   selectedChatData: ContactsTypes | undefined;
   selectedChatMessages: MessagesTypes[];
   directMessagesContacts: ContactsTypes[];
+  isUploading: boolean;
+  isDownloading: boolean;
+  fileUploadProgress: number;
+  fileDownloadProgress: number;
+
+  setIsUploading: (isUploading: boolean) => void;
+  setIsDownloading: (isDownloading: boolean) => void;
+  setFileUploadProgress: (fileUploadProgress: number) => void;
+  setFileDownloadProgress: (fileDownloadProgress: number) => void;
   setSelectedChatType: (selectedChatType: ChatTypes) => void;
   setSelectedChatData: (selectedChatData: ContactsTypes) => void;
   setSelectedChatMessages: (selectedChatMessages: MessagesTypes[]) => void;
@@ -23,7 +32,17 @@ export const useChatSlice = create<ChatSliceTypes>()((set, get) => ({
   selectedChatData: undefined,
   selectedChatMessages: [],
   directMessagesContacts: [],
+  isUploading: false,
+  isDownloading: false,
+  fileUploadProgress: 0,
+  fileDownloadProgress: 0,
 
+  setIsUploading: (isUploading: boolean) => set({ isUploading }),
+  setIsDownloading: (isDownloading: boolean) => set({ isDownloading }),
+  setFileUploadProgress: (fileUploadProgress: number) =>
+    set({ fileUploadProgress }),
+  setFileDownloadProgress: (fileDownloadProgress: number) =>
+    set({ fileDownloadProgress }),
   setSelectedChatType: (selectedChatType: ChatTypes) =>
     set({ selectedChatType }),
   setSelectedChatData: (selectedChatData: ContactsTypes) =>
