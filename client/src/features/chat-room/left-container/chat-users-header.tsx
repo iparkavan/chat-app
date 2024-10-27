@@ -27,7 +27,6 @@ import { ContactsTypes } from "@/types/contacts-types";
 import { useChatSlice } from "@/store/slices/chat-slice";
 
 const ChatUserHeader = () => {
-  
   const { setSelectedChatType, setSelectedChatData } = useChatSlice();
 
   const [isNewContactModal, setIsNewContactModal] = useState(false);

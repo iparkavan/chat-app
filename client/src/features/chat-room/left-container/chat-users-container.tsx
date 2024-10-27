@@ -6,6 +6,15 @@ import { axios } from "@/lib/axios";
 import { GET_DM_CONTACTS_ROUTES } from "@/lib/api-routes";
 import { useChatSlice } from "@/store/slices/chat-slice";
 import ContactList from "./components/contacts-list";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
+import { FaPlus } from "react-icons/fa";
+import CreateChannel from "./components/create-channel";
 
 const ChatUsersContainer = () => {
   const { directMessagesContacts, setDirectMessagesContacts } = useChatSlice();
@@ -37,10 +46,13 @@ const ChatUsersContainer = () => {
         <Heading heading="Direct Message" />
 
         <div className="max-h-[38vh] overflow-y-auto scrollbar-hidded">
-          <ContactList contacts={directMessagesContacts} />
+          <ContactList contacts={directMessagesContacts} isChannel={false} />
         </div>
 
-        <Heading heading="Channels" />
+        <div className="flex items-center justify-between mt-2">
+          <Heading heading="Channels" />
+          <CreateChannel />
+        </div>
       </section>
     </div>
   );

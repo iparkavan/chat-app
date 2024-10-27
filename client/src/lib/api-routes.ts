@@ -3,6 +3,7 @@
 const CONTACTSAPI = `/api/contacts`;
 const SEARCHCONTACTSROUTES = `${CONTACTSAPI}/search`;
 const GET_DM_CONTACTS_ROUTES = `${CONTACTSAPI}/get-contact-for-dm`;
+const GET_ALL_CONTACTS_ROUTES = `${CONTACTSAPI}/get-all-contacts`;
 
 const MESSAGESAPI = `/api/messages`;
 const GETALLMESSAGESROUTES = `${MESSAGESAPI}/get-messages`;
@@ -13,4 +14,5 @@ export {
   GETALLMESSAGESROUTES,
   GET_DM_CONTACTS_ROUTES,
   UPLOAD_FILE_ROUTE,
+  GET_ALL_CONTACTS_ROUTES,
 };

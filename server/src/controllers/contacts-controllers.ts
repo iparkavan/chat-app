@@ -93,3 +93,21 @@ export const getContactsForDmList: ExpressHandler = async (req, res, next) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getAllContacts: ExpressHandler = async (req, res, next) => {
+  try {
+    const users = User.find(
+      { _id: { $ne: req.userId } },
+      "firstName, lastName, _id, email"
+    );
+
+    const contacts = (await users).map((user) => ({
+      label: user.firstName ? `${user.firstName} ${user.lastName}` : user.email,
+      value: user._id,
+    }));
+
+    return res.status(200).json({ contacts });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};

@@ -25,6 +25,10 @@ const ChatArea = () => {
     selectedChatData,
     selectedChatType,
     selectedChatMessages,
+    isUploading,
+    isDownloading,
+    fileUploadProgress,
+    fileDownloadProgress,
     setSelectedChatMessages,
     setIsDownloading,
     setFileDownloadProgress,
@@ -71,10 +75,42 @@ const ChatArea = () => {
     return imageRegex.test(filePath);
   };
 
+  // const downloadFile = async (url: string) => {
+  //   try {
+  //     setIsDownloading(true);
+  //     setFileDownloadProgress(0);
+  //     const response = await axios.get(`${HOST}/${url}`, {
+  //       responseType: "blob",
+  //       onDownloadProgress: (progressEvent: AxiosProgressEvent) => {
+  //         const { loaded, total } = progressEvent;
+  //         if (total) {
+  //           const percentCompleted = Math.round((loaded * 100) / total);
+  //           setFileDownloadProgress(percentCompleted);
+  //         }
+  //       },
+  //     });
+
+  //     setIsDownloading(false);
+  //   } catch (error) {
+  //     setIsDownloading(false);
+  //     console.log(error);
+  //   }
+
+  //   const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
+  //   const link = document.createElement("a");
+  //   link.href = urlBlob;
+  //   link.setAttribute("download", url.split("/").pop() as string);
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   link.remove();
+  //   window.URL.revokeObjectURL(urlBlob);
+  // };
+
   const downloadFile = async (url: string) => {
     try {
       setIsDownloading(true);
       setFileDownloadProgress(0);
+
       const response = await axios.get(`${HOST}/${url}`, {
         responseType: "blob",
         onDownloadProgress: (progressEvent: AxiosProgressEvent) => {
@@ -86,20 +122,20 @@ const ChatArea = () => {
         },
       });
 
+      const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = urlBlob;
+      link.setAttribute("download", url.split("/").pop() as string);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(urlBlob);
+
       setIsDownloading(false);
     } catch (error) {
       setIsDownloading(false);
       console.log(error);
     }
-
-    const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
-    link.href = urlBlob;
-    link.setAttribute("download", url.split("/").pop() as string);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.URL.revokeObjectURL(urlBlob);
   };
 
   // Function for rendering all the message types
@@ -150,7 +186,7 @@ const ChatArea = () => {
       {message.messageType === "file" && (
         <div
           className={cn(
-            `inline-block p-2 rounded-2xl my-1 max-w-[50%] break-words`,
+            `inline-block p-2 rounded-2xl my-1 max-w-[50%] break-words truncate`,
             message.sender !== selectedChatData?._id
               ? "bg-primary text-white dark:bg-primary dark:text-black"
               : "bg-primary-foreground text-primary dark:text-primary"
@@ -174,10 +210,13 @@ const ChatArea = () => {
             </div>
           ) : (
             <div className="flex items-center justify-center gap-4">
+              {/* {isDownloading && (
+                <p className="text-lg">{fileDownloadProgress}%</p>
+              )} */}
               <span className="bg-muted-foreground rounded-full p-3">
                 <MdFolderZip />
               </span>
-              <span>{message.fileUrl.split("/").pop()}</span>
+              <span>{message.fileUrl.split("/").pop()?.substring(0, 12)}</span>
               <span
                 className="bg-black rounded-full p-3 hover:bg-muted-foreground cursor-pointer transition-all duration-300"
                 onClick={() => downloadFile(message.fileUrl)}
