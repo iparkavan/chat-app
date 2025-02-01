@@ -1,6 +1,6 @@
 "use client";
 
-import RootLoading from "@/app/loading";
+// import RootLoading from "@/app/loading";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -101,9 +101,9 @@ const ProfileSetup = () => {
     }
   }, [userInfo, setUserInfo]);
 
-  if (isUserInfoLoading) {
-    return <RootLoading />;
-  }
+  // if (isUserInfoLoading) {
+  //   return <RootLoading />;
+  // }
 
   const onProfileSetupSubmit: SubmitHandler<ProfileSetupFields> = async ({
     firstName,

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { axios } from "./axios";
 import { useAuthslice } from "@/store/slices/auth-slice";
-import LottieLoading from "@/common/lottie-loading";
+// import LottieLoading from "@/common/lottie-loading";
 
 const ClientProviders = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -35,7 +35,7 @@ const ClientProviders = ({ children }: { children: React.ReactNode }) => {
   }, [userInfo, setUserInfo]);
 
   if (isLoading) {
-    return <LottieLoading />;
+    return <div>Loading...</div>;
   }
 
   return <div>{children}</div>;
